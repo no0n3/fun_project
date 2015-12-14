@@ -1,0 +1,11 @@
+public_html/images/**
+.idea
+nbproject
+/vendor
+composer.lock
+composer.phar
+.DS_Store
+phpunit.phar
+node_modules
+npm-debug.log
+/console
