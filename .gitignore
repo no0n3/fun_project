@@ -1,4 +1,4 @@
-#public_html/images/**
+public_html/images/**
 .idea
 nbproject
 /vendor
