@@ -91,9 +91,17 @@ class CreateUpdateForm extends \models\BaseModel {
 
         $updateDir = CW::$app->params['sitePath'] . 'public_html/images/updates/' . $this->newUpdateId;
 
+        if (!file_exists(CW::$app->params['sitePath'] . 'public_html/images/updates')) {
+            mkdir(CW::$app->params['sitePath'] . 'public_html/images/updates');
+        }
+
         mkdir($updateDir);
 
         if ('image/gif' === $this->image->getExt()) {
+            if (!file_exists(CW::$app->params['sitePath'] . 'public_html/images/tmp')) {
+                mkdir(CW::$app->params['sitePath'] . 'public_html/images/tmp');
+            }
+
             $videoName = $this->newUpdateId;
 
             $i = ImageHelper::loadImage($this->image->getImage());

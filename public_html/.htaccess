@@ -1,5 +1,8 @@
 RewriteEngine On
 
+Rewritecond %{HTTP_HOST} ^vinteres\.com
+#RewriteRule ^(.*)$ http://vinteres.com/$1 [R=301,L]
+
 RewriteRule ^search$ index.php/site/search
 RewriteRule ^ajax/search$ index.php/site/ajaxSearch
 RewriteRule ^ajax/update/load index.php/update/ajaxLoad
