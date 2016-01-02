@@ -1,3 +1,6 @@
+<?php
+use components\UrlManager;
+?>
 <?php if (null === $update) : ?>
 <div style="width: 100%;">
     <div style="margin: auto; width: 400px;
@@ -18,12 +21,16 @@ $(function() {
 
         if (!left && 37 == e.keyCode) {
             if (<?= $prevUpdateId ? 'true' : 'false' ?>) {
-                window.location = '<?= $categoryName ? "/$categoryName" : '' ?>/update/<?= $prevUpdateId ?>';
+                window.location = <?= $categoryName ? 
+                    json_encode(UrlManager::to(['update/view', 'id' => $prevUpdateId, 'category' => $categoryName]))
+                    : json_encode(UrlManager::to(['update/view', 'id' => $prevUpdateId])) ?>;
             }
             left = true;
         } else if (!right && 39 == e.keyCode) {
             if (<?= $nextUpdateId ? 'true' : 'false' ?>) {
-                window.location = '<?= $categoryName ? "/$categoryName" : '' ?>/update/<?= $nextUpdateId ?>';
+                window.location = <?= $categoryName ? 
+                    json_encode(UrlManager::to(['update/view', 'id' => $nextUpdateId, 'category' => $categoryName]))
+                    : json_encode(UrlManager::to(['update/view', 'id' => $nextUpdateId])) ?>;
             }
             right = true;
         } else {
@@ -114,8 +121,8 @@ $(function() {
         ele : upvote,
         beforeVote : function(_data) {
             _data.url = voted ?
-                <?= json_encode(\components\UrlManager::to(['update/unvote'])) ?>
-                : <?= json_encode(\components\UrlManager::to(['update/upvote'])) ?>;
+                <?= json_encode(UrlManager::to(['update/unvote'])) ?>
+                : <?= json_encode(UrlManager::to(['update/upvote'])) ?>;
             _data.data = {
                 id : <?= $update['id'] ?>
             };
