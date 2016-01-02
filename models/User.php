@@ -8,8 +8,24 @@ use CW;
  */
 class User extends BaseModel {
 
+    const SETTINGS_PROFILE  = 'profile';
+    const SETTINGS_PASSWORD = 'password';
+    const SETTINGS_PICTURE  = 'picture';
+
     const IMAGE_MEDIUM_SIZE = 200;
     const IMAGE_SMALL_SIZE = 50;
+
+    public static function isValidSettingType($type) {
+        return in_array($type, static::getAllSettingTypes());
+    }
+
+    public static function getAllSettingTypes() {
+        return [
+            static::SETTINGS_PROFILE,
+            static::SETTINGS_PASSWORD,
+            static::SETTINGS_PICTURE
+        ];
+    }
 
     public $lqlq;
     public $password;
@@ -34,7 +50,7 @@ class User extends BaseModel {
     }
 
     public static function getProfileUrl($userId) {
-        return '/profile/' . $userId;
+        return \components\UrlManager::to(['user/view', 'id' => $userId]);
     }
 
     public function getCategories() {

@@ -4,6 +4,7 @@ namespace components\web;
 use components\exceptions\ForbiddenException;
 use components\exceptions\WrongMethodException;
 use components\exceptions\BadRequestException;
+use components\exceptions\NotFoundException;
 use CW;
 
 /**
@@ -22,7 +23,12 @@ abstract class Controller extends \classes\Object {
     public $hasCsrfValidation = false;
 
     public $view;
+    public $actionId;
     public $id;
+
+    public function doNotFoundError() {
+        return $this->doError(new NotFoundException());
+    }
 
     public function doError($exception = null) {
         function setError($code, $msg) {
@@ -42,6 +48,8 @@ abstract class Controller extends \classes\Object {
                 return setError(405, 'WRONG METHOD');
             } else if ($e instanceof BadRequestException) {
                 return setError(400, 'BAD REQUEST');
+            } else if ($e instanceof NotFoundException) {
+                return setError(404, 'NOT FOUND');
             } else {
                 return setError(500, 'INTERNAL SERVER ERROR');
             }
@@ -59,13 +67,20 @@ abstract class Controller extends \classes\Object {
     function __construct($id, $actionId) {
         $this->view = new \components\web\View($this);
         $this->id = $id;
+        $this->actionId = $actionId;
     }
 
     public function rules() {
         return [
+            Controller::ALL => [
+                'response_type' => 'text/html',
+            ],
             'error' => [
                 'response_type' => 'text/html'
-            ]
+            ],
+            'notFoundError' => [
+                'response_type' => 'text/html'
+            ],
         ];
     }
 

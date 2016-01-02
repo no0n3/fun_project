@@ -26,7 +26,7 @@ var App = {
         },
         logout : function() {
             var form = document.createElement("form");
-            form.setAttribute("action", "/logout");
+            form.setAttribute("action", "/logout.php");
             form.setAttribute("method", "post");
             var inp = document.createElement("input");
             inp.setAttribute("type", "hidden");
@@ -257,7 +257,7 @@ var App = {
                 videoCont.appendChild(videoPlay);
 
                 video.setAttribute('style', 'vertical-align : top; min-height:209.78260869565px; width: 500px; max-width: 100%;');
-                video.setAttribute('poster', '/images/' + data.id + '_poster.jpeg');
+                video.setAttribute('poster', '/images/updates/' + data.id + '/poster.jpeg');
                 video.setAttribute('muted', 'true');
                 video.setAttribute('loop', 'true');
                 video.setAttribute('width', '500');
@@ -274,10 +274,10 @@ var App = {
                 });
 
                 var video1 = document.createElement('source');
-                video1.setAttribute('src', '/images/' + data.id + '_medium.mp4');
+                video1.setAttribute('src', '/images/updates/' + data.id + '/medium.mp4');
 
                 var video2 = document.createElement('source');
-                video2.setAttribute('src', '/images/' + data.id + '_medium.webm');
+                video2.setAttribute('src', '/images/updates/' + data.id + '/medium.webm');
 
                 video.appendChild(video1);
                 video.appendChild(video2);
@@ -298,7 +298,7 @@ var App = {
 
                 for (var j in data.tags) {
                     var tag = document.createElement('a');
-                    tag.setAttribute('href', '/search?term=' + data.tags[j].name);
+                    tag.setAttribute('href', data.tags[j].url);
                     tag.setAttribute('class', 'link');
                     tag.innerHTML = '#' + data.tags[j].name;
                     tagsCont.appendChild(tag);
@@ -310,12 +310,12 @@ var App = {
 
             var comment = document.createElement('a');
             comment.innerHTML = 'comments ' + data.comments;
-            comment.setAttribute('href', '/update/'+data.id+'#comments');
+            comment.setAttribute('href', updateUrl + '#comments');
             comment.setAttribute('class', 'btn');
 
             var points = document.createElement('a');
-            points.innerHTML = 'points ' + data.comments;
-            points.setAttribute('href', '/update/' + data.id);
+            points.innerHTML = 'points ' + data.upvotes;
+            points.setAttribute('href', updateUrl);
             points.setAttribute('class', 'btn');
 
             var commentCont = document.createElement('span');
@@ -331,10 +331,12 @@ var App = {
                 App.button.vote1({
                     ele : upvote,
                     beforeVote : function(_data) {
-                        _data.url = data.voted ? '/update/unvote' : '/update/upvote';
+                        _data.url = data.voted ? '/ajax/update-unvote.php' : '/ajax/update-upvote.php';
                         _data.data = {
                             id : data.id
                         };
+
+                        return true;
                     },
                     onVote : function(response) {
                         if (response) {
@@ -355,7 +357,7 @@ var App = {
 
                 var commentBtn = document.createElement('a');
                 commentBtn.setAttribute('class', 'fa fa-comment update-btn');
-                commentBtn.setAttribute('href', '/update/' + data.id + '#create-comment');
+                commentBtn.setAttribute('href', updateUrl + '#create-comment');
                 commentBtn.setAttribute('title', 'comment');
 
                 operButtonsCont.appendChild(upvote);
@@ -373,7 +375,7 @@ var App = {
 
             $.ajax({
                 type : 'POST',
-                url : "/comment/create",
+                url : "/comment/create.php",
                 data : data,
                 success : function(response) {
                     var comment = App.comment.renderComment(response);
@@ -393,7 +395,7 @@ var App = {
         load : function(data, addTo, loadReplies, callback) {
             $.ajax({
                 type:'get',
-                url : true === loadReplies ? "/comment/loadReplies" : "/comment/load",
+                url : true === loadReplies ? "/ajax/comment-load-replies.php" : "/ajax/comment-load.php",
                 data : data,
                 success : function(response) {
                     for (var i = 0; i < response.items.length; i++) {
@@ -556,14 +558,9 @@ var App = {
             var _data = {};
 
             data.ele.onclick = function() {
-                console.log('dsa');
-                if (data.beforeVote) {
-                    if (!data.beforeVote(_data)) {
-                        return;
-                    }
+                if (data.beforeVote && !data.beforeVote(_data)) {
+                    return;
                 }
-
-                console.log(_data);
 
                 sAjax({
                     url : _data.url,
@@ -576,60 +573,6 @@ var App = {
                     }
                 });
             };
-return;
-            var vote = document.createElement('span');
-            vote.setAttribute('class', 'btn');
-
-            var upvotes = document.createElement('span');
-            upvotes.innerHTML = data.upvotes;
-            upvotes.setAttribute('style', 'margin-left : 5px;');
-
-            if (App.user.isLogged()) {
-                vote.innerHTML = data.voted ? 'unvote' : 'upvote';
-
-                vote.onclick = function() {
-                    var url = '';
-
-                    if (App.button.VOTE_TYPE_UPDATE === data.type) {
-                        url = data.voted ? '/update/unvote' : '/update/upvote';
-                    } else if (App.button.VOTE_TYPE_COMMENT === data.type) {
-                        url = data.voted ? '/comment/unvote' : '/comment/upvote';
-                    } else {
-                        return;
-                    }
-
-                    sAjax({
-                        url : url,
-                        type : 'POST',
-                        data : {
-                            id : data.id
-                        },
-                        success : function(response) {
-                            if (!response) {
-                                return;
-                            }
-
-                            if (data.voted) {
-                                data.voted = false;
-                                vote.innerHTML = 'upvote';
-                                upvotes.innerHTML = parseInt(upvotes.innerHTML) - 1;
-                            } else {
-                                data.voted = true;
-                                vote.innerHTML = 'unvote';
-                                upvotes.innerHTML = parseInt(upvotes.innerHTML) + 1;
-                            }
-                        }
-                    });
-                };
-            } else {
-                vote.innerHTML = 'upvotes';
-            }
-
-            var voteCont = document.createElement('span');
-            voteCont.appendChild(vote);
-            voteCont.appendChild(upvotes);
-
-            return voteCont;
         },
         vote : function(data) {
             var vote = document.createElement('span');
@@ -646,9 +589,9 @@ return;
                     var url = '';
 
                     if (App.button.VOTE_TYPE_UPDATE === data.type) {
-                        url = data.voted ? '/update/unvote' : '/update/upvote';
+                        url = data.voted ? '/ajax/update-unvote.php' : '/ajax/update-upvote.php';
                     } else if (App.button.VOTE_TYPE_COMMENT === data.type) {
-                        url = data.voted ? '/comment/unvote' : '/comment/upvote';
+                        url = data.voted ? '/ajax/comment-unvote.php' : '/ajax/comment-upvote.php';
                     } else {
                         return;
                     }

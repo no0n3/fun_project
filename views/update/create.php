@@ -107,7 +107,14 @@ $(function() {
             input.setAttribute('name', '<?= $modelName ?>[tags][]');
             input.setAttribute('value', name);
             cont.setAttribute('class', 'category-cont category-cbx');
-            cont.innerHTML = name;
+
+            cont.innerHTML = name
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
             cont.appendChild(input);
             cont.appendChild(remove);
 
@@ -131,12 +138,12 @@ $(function() {
     <?php if ($success) : ?>
     <div class="success">
         <i class="fa fa-check-circle"></i>
-        <span class="success-msg"> Update successfully created. <a class="success-link" href="/update/<?= $model->newUpdateId ?>">Click here</a> to view update.</span>
+        <span class="success-msg"> Update successfully created. <a class="success-link" href="<?= \components\UrlManager::to(['update/view', 'id' => $model->newUpdateId]) ?>">Click here</a> to view update.</span>
     </div>
     <?php else : ?>
     <h1> Create Update </h1>
     <div style="padding: 15px;" class="start-page-cont">
-    <form action="/update/create" id="f1" method="post" enctype="multipart/form-data">
+    <form id="f1" method="post" enctype="multipart/form-data">
         <div class="field-sep">
             <div>
                 <span> Title: </span>

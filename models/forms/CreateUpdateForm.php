@@ -88,11 +88,11 @@ class CreateUpdateForm extends \models\BaseModel {
         if (0 >= CW::$app->db->executeUpdate($categoryInsert)) {
             return false;
         }
-
+        
         $updateDir = CW::$app->params['sitePath'] . 'public_html/images/updates/' . $this->newUpdateId;
 
         if (!file_exists(CW::$app->params['sitePath'] . 'public_html/images/updates')) {
-            mkdir(CW::$app->params['sitePath'] . 'public_html/images/updates');
+           mkdir(CW::$app->params['sitePath'] . 'public_html/images/updates');
         }
 
         mkdir($updateDir);
@@ -101,8 +101,6 @@ class CreateUpdateForm extends \models\BaseModel {
             if (!file_exists(CW::$app->params['sitePath'] . 'public_html/images/tmp')) {
                 mkdir(CW::$app->params['sitePath'] . 'public_html/images/tmp');
             }
-
-            $videoName = $this->newUpdateId;
 
             $i = ImageHelper::loadImage($this->image->getImage());
 
@@ -113,12 +111,12 @@ class CreateUpdateForm extends \models\BaseModel {
 
             imagejpeg(
                 ImageHelper::scaleImage($i->getImage(), 500),
-                CW::$app->params['sitePath'] . "public_html/images/{$videoName}_poster.jpeg"
+                CW::$app->params['sitePath'] . "public_html/images/updates/{$this->newUpdateId}/poster.jpeg"
             );
 
-            $inpFile = CW::$app->params['sitePath'] . "public_html/images/tmp/{$videoName}_medium.gif";
+            $inpFile = CW::$app->params['sitePath'] . "public_html/images/tmp/{$this->newUpdateId}_medium.gif";
 
-            $outFileMedium = CW::$app->params['sitePath'] . "public_html/images/{$videoName}_medium";
+            $outFileMedium = "$updateDir/medium";
 
             foreach (['mp4', 'webm'] as $ext) {
                 $mediumBytes = ImageHelper::resizeGif($this->image->getImage(), 500);

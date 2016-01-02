@@ -1,4 +1,7 @@
 <?php
+use models\User;
+use components\UrlManager;
+
 $modelName = $model->getClassName(false);
 ?>
 <script>
@@ -38,9 +41,9 @@ $(function() {
 <div style="width : 700px; margin : auto; position: relative; border : 0px solid gray; ">
     <div class="start-page-cont" style="width : 250px; float: left; margin-top: 75px;">
         <ul class="edit-opt-cont">
-            <li <?= $settingType === 'profile' ? 'class="setting-selected"' : ''?>><a class="edit-opt-link" href="/settings/profile">Profile</a></li>
-            <li <?= $settingType === 'picture' ? 'class="setting-selected"' : ''?>><a class="edit-opt-link" href="/settings/picture">Picture</a></li>
-            <li <?= $settingType === 'password' ? 'class="setting-selected"' : ''?>><a class="edit-opt-link" href="/settings/password">Password</a></li>
+            <li <?= $settingType === User::SETTINGS_PROFILE ? 'class="setting-selected"' : ''?>><a class="edit-opt-link" href="<?= UrlManager::to(['user/settings', 't' => User::SETTINGS_PROFILE]) ?>">Profile</a></li>
+            <li <?= $settingType === User::SETTINGS_PICTURE ? 'class="setting-selected"' : ''?>><a class="edit-opt-link" href="<?= UrlManager::to(['user/settings', 't' => User::SETTINGS_PICTURE]) ?>">Picture</a></li>
+            <li <?= $settingType === User::SETTINGS_PASSWORD ? 'class="setting-selected"' : ''?>><a class="edit-opt-link" href="<?= UrlManager::to(['user/settings', 't' => User::SETTINGS_PASSWORD]) ?>">Password</a></li>
         </ul>
     </div>
     <div style="margin : 10px; float: left; width : 400px">

@@ -106,17 +106,21 @@ $(function() {
 
     var upvotesEle = document.getElementById('upvotes');
     var upvote = document.getElementById('upvote-btn');
-    console.log(upvote);
+
     var voted = <?= $update['voted'] ? 'true' : 'false' ?>;
     var upvotes = <?= $update['upvotes'] ?>;
 
     App.button.vote1({
         ele : upvote,
         beforeVote : function(_data) {
-            _data.url = voted ? '/update/unvote' : '/update/upvote';
+            _data.url = voted ?
+                <?= json_encode(\components\UrlManager::to(['update/unvote'])) ?>
+                : <?= json_encode(\components\UrlManager::to(['update/upvote'])) ?>;
             _data.data = {
                 id : <?= $update['id'] ?>
             };
+
+            return true;
         },
         onVote : function(response) {
             if (response) {
@@ -138,24 +142,24 @@ $(function() {
 <div style="width : 800px; margin : auto; position: relative; ">
     <h2 class='update-title'><?= $update['description'] ?>
     <?php foreach ($categories as $category) : ?>
-        <a href="/<?= $category['name'] ?>" style="font-weight: initial;
+        <a href="<?= \components\UrlManager::to(['site/index', 'category' => $category['name']]) ?>" style="font-weight: initial;
     font-size: initial;
     vertical-align: middle;
     background-color: #3DAD3D;
 color: white;
 text-decoration: none;
-    padding: 1px 5px;"><?= $category['name'] ?></a>
+padding: 1px 5px;"><?= htmlspecialchars($category['name']) ?></a>
         <?php endforeach; ?>
     </h2>
     <div style="text-align: center;
         vertical-align: top;
         outline: 1px solid #ddd; background-color: black;">
         <?php if ($update['is_gif']) : ?>
-        <video poster="'/images/<?= $update['id'] ?>_poster.jpeg'" style="min-height:209.78260869565px;width: 500px; vertical-align: top;" width="500"
+        <video poster="/images/updates/<?= $update['id'] ?>/poster.jpeg" style="min-height:209.78260869565px;width: 500px; vertical-align: top;" width="500"
         loop muted autoplay="true"
         >
-            <source src="/images/<?= $update['id'] ?>_medium.mp4">
-            <source src="/images/<?= $update['id'] ?>_medium.webm">
+            <source src="/images/updates/<?= $update['id'] ?>/medium.mp4">
+            <source src="/images/updates/<?= $update['id'] ?>/medium.webm">
         </video>
         <?php else : ?>
         <img class="image" src="<?= $update['imageUrl'] ?>">
@@ -164,7 +168,7 @@ text-decoration: none;
     <?php if (!empty($update['tags'])) : ?>
     <div style="padding: 10px 5px;">
         <?php foreach ($update['tags'] as $tag) : ?>
-        <a class="link" href="/search?term=<?= $tag['name'] ?>">#<?= $tag['name'] ?></a>
+        <a class="link" href="<?= \components\UrlManager::to(['site/search', 'term' => $tag['name']]) ?>">#<?= htmlspecialchars($tag['name']) ?></a>
         <?php endforeach; ?>
     </div>
     <?php endif; ?>

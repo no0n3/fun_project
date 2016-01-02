@@ -144,11 +144,10 @@ abstract class BaseModel extends \classes\Object {
             return 'N/A';
         }
 
-        $currenttime = time();
-        $time = strtotime($postedAgo);
+        $time = !is_numeric($postedAgo) ? strtotime($postedAgo) : $postedAgo;
 
         $currenttime = (int) strtotime(date('Y-m-d H:i:s', time())) * 1000;
-        $time = (int) strtotime($postedAgo) * 1000;
+        $time = (int) $time * 1000;
 
         $dif = ( $currenttime - $time ) / 1000;
         $dif = (int) $dif;

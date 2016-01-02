@@ -10,7 +10,7 @@ class DBConnection {
     private $SERVER_NAME = 'localhost';
     private $DB_USERNAME = 'root';
     private $DB_PASSWORD = 'velizar1';
-    private $DB_NAME     = 'cw1';
+    private $DB_NAME     = 'cw2';
 
     private $inTransaction = false;
 
@@ -46,7 +46,7 @@ class DBConnection {
      * 
      */
     public function rollback() {
-        if ($this->isOpen() && $this->inTransaction) {
+        if ($this->inTransaction && $this->isOpen() && $this->inTransaction) {
             $this->con->rollback();
             $this->inTransaction = false;
         }

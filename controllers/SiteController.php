@@ -15,11 +15,11 @@ class SiteController extends BaseController {
 
     public function rules() {
         return array_merge(parent::rules(), [
-            Controller::ALL => [
-                'response_type' => 'application/json',
-                'roles' => [Controller::REQUIRED_LOGIN],
-                'methods' => ['post']
-            ],
+//            Controller::ALL => [
+//                'response_type' => 'application/json',
+//                'roles' => [Controller::REQUIRED_LOGIN],
+//                'methods' => ['post']
+//            ],
             'index' => [
                 'response_type' => 'text/html',
                 'roles' => [Controller::ALL],

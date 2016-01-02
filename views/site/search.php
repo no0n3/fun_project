@@ -10,13 +10,13 @@ $(function() {
         updatesCont : document.getElementById('updates-cont'),
         loadingEle  : document.getElementById('loading'),
         noResultEle : document.getElementById('no-results-found'),
-        url : "/ajax/search",
+        url : <?= json_encode(\components\UrlManager::to(['site/ajaxSearch'])) ?>,
         ajaxData : {
-            term : '<?= \CW::$app->request->get('term') ?>',
+            term : <?= json_encode(\CW::$app->request->get('term')) ?>,
             category : '<?= CW::$app->request->get('category') ?>'
         }
     })
-        .load();fds
+        .load();
 });
 </script>
 

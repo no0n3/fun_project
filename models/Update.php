@@ -2,6 +2,7 @@
 namespace models;
 
 use CW;
+use components\UrlManager;
 
 /**
  * @author Velizar Ivanov <zivanof@gmail.com>
@@ -26,9 +27,6 @@ class Update {
 
     const POPULAR_UPDATES_LIMIT = 15;
     const UPDATES_LOAD_COUNT = 10;
-
-    const TRENDING_MIN_RATE = 100;
-    const MOST_POPULAR_MIN_RATE = 100;
 
     public static function getAllActivityTypesAsString() {
         return [
@@ -57,9 +55,8 @@ class Update {
             } else {
                 $query = "SELECT *, "
                     . (CW::$app->user->isLogged() ? ("0 < (SELECT count(*) FROM `update_upvoters` WHERE `update_id` = `updates`.`id` AND `user_id` = " . CW::$app->user->identity->id . ") ") : ' false ')
-                    . " `voted` FROM `updates` "
-                    . ((self::isValidType($type) && $type == self::TYPE_TRENDING) ? (' WHERE `upvotes` > ' . self::TRENDING_MIN_RATE) : '')
-                    . " ORDER BY `rate` ASC LIMIT " . self::UPDATES_LOAD_COUNT . " OFFSET $page";
+                    . " `voted` FROM `updates` WHERE `rate` > 0"
+                    . " ORDER BY `rate`, `created_at` LIMIT " . self::UPDATES_LOAD_COUNT . " OFFSET $page";
             }
         } else {
             if (!is_numeric($categoryId)) {
@@ -74,9 +71,8 @@ class Update {
             } else {
                 $query = "SELECT u.*, "
                     . (CW::$app->user->isLogged() ? ("0 < (SELECT count(*) FROM `update_upvoters` WHERE `update_id` = `u`.`id` AND `user_id` = " . CW::$app->user->identity->id . ") ") : ' false ')
-                    . " `voted` FROM `updates` u JOIN `update_categories` uc ON uc.`update_id` = u.id WHERE uc.category_id = $categoryId "
-                    . ((self::isValidType($type) && $type == self::TYPE_TRENDING) ? (' AND `rate` > ' . self::TRENDING_MIN_RATE) : '')
-                    . " ORDER BY `rate` ASC LIMIT " . self::UPDATES_LOAD_COUNT . " OFFSET $page";
+                    . " `voted` FROM `updates` u JOIN `update_categories` uc ON uc.`update_id` = u.id WHERE uc.category_id = $categoryId  AND `rate` > 0"
+                    . " ORDER BY `rate`, `created_at` LIMIT " . self::UPDATES_LOAD_COUNT . " OFFSET $page";
             }
         }
 
@@ -197,7 +193,7 @@ class Update {
 
     public static function getPopularUpdates() {
         $query = "SELECT * FROM `updates` WHERE `created_at` > '" . (date("Y-m-d H:i:s", strtotime('-3 days'))) . "' "
-                . "AND `rate` > " . self::MOST_POPULAR_MIN_RATE
+                . "AND `rate` > 0"
                 . " ORDER BY `rate` DESC LIMIT " . self::POPULAR_UPDATES_LIMIT;
 
         $stmt = CW::$app->db->executeQuery($query);
@@ -276,10 +272,8 @@ class Update {
         }
 
         if (isset($categoryId)) {
-            $query = "SELECT u.`id` FROM `updates` u JOIN update_categories uc ON uc.update_id = u.id WHERE uc.category_id = $categoryId AND "
-                . (self::isTrending($upvotes) ? "u.`rate` < $rate" : "u.`created_at` < '$createdAt'")
-                . " ORDER BY "
-                . (self::isTrending($upvotes) ? "u.`rate`" : "u.`created_at`")
+            $query = "SELECT u.`id` FROM `updates` u JOIN update_categories uc ON uc.update_id = u.id WHERE uc.category_id = $categoryId AND u.`created_at` < '$createdAt'"
+                . " ORDER BY u.`created_at`"
                 . " DESC LIMIT 1";
 
             $stmt = CW::$app->db->executeQuery($query);
@@ -292,10 +286,8 @@ class Update {
 
             return null;
         } else {
-            $query = "SELECT `id` FROM `updates` WHERE "
-                . (self::isTrending($upvotes) ? "`rate` < $rate" : "`created_at` < '$createdAt'")
-                . " ORDER BY "
-                . (self::isTrending($upvotes) ? "`rate`" : "`created_at`")
+            $query = "SELECT `id` FROM `updates` WHERE `created_at` < '$createdAt'"
+                . " ORDER BY `created_at`"
                 . " DESC LIMIT 1";
 
             $stmt = CW::$app->db->executeQuery($query);
@@ -345,10 +337,8 @@ class Update {
         }
 
         if (isset($categoryId)) {
-            $query = "SELECT u.`id` FROM `updates` u JOIN update_categories uc ON uc.update_id = u.id WHERE uc.category_id = $categoryId AND "
-                . (self::isTrending($upvotes) ? "u.`rate` > $rate" : "u.`created_at` > '$createdAt'")
-                . " ORDER BY "
-                . (self::isTrending($upvotes) ? "u.`rate`" : "u.`created_at`")
+            $query = "SELECT u.`id` FROM `updates` u JOIN update_categories uc ON uc.update_id = u.id WHERE uc.category_id = $categoryId AND u.`created_at` > '$createdAt'"
+                . " ORDER BY u.`created_at`"
                 . " ASC LIMIT 1";
 
             $stmt = CW::$app->db->executeQuery($query);
@@ -361,10 +351,8 @@ class Update {
 
             return null;
         } else {
-            $query = "SELECT `id` FROM `updates` WHERE "
-                . (self::isTrending($upvotes) ? "`rate` > $rate" : "`created_at` > '$createdAt'")
-                . " ORDER BY "
-                . (self::isTrending($upvotes) ? "`rate`" : "`created_at`")
+            $query = "SELECT `id` FROM `updates` WHERE `created_at` > '$createdAt'"
+                . " ORDER BY `created_at`"
                 . " ASC LIMIT 1";
 
             $stmt = CW::$app->db->executeQuery($query);
@@ -379,16 +367,12 @@ class Update {
         }
     }
 
-    private static function isTrending($upvotes) {
-        return $upvotes > self::TRENDING_MIN_RATE;
-    }
-
     public static function getUpdateImageUrl($updateId, $size = self::IMAGE_MEDIUM_WIDTH) {
         return '/images/updates/' . $updateId . '/' . $size . 'xX.jpeg';
     }
 
     public static function getUpdateUrl($updateId) {
-        return '/update/' . $updateId;
+        return UrlManager::to(['update/view', 'id' => $updateId]);
     }
 
     public static function upvote($updateId, $userId) {
@@ -403,7 +387,7 @@ class Update {
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         if (0 < count($result)) {
-            $rate = self::calculateRankSum($result[0]['upvotes'] + 1, strtotime($result[0]['created_at']));
+            $rate = self::calculateRankSum($result[0]['upvotes'] + 1, $result[0]['created_at']);
         }
         CW::$app->db->executeUpdate("INSERT INTO `update_upvoters` (`user_id`, `update_id`, `voted_at`) VALUES ($userId, $updateId, ".time().")");
 
@@ -431,7 +415,7 @@ class Update {
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
  
         if (0 < count($result)) {
-            $rate = static::calculateRankSum($result[0]['upvotes'] - 1, strtotime($result[0]['created_at']));
+            $rate = static::calculateRankSum($result[0]['upvotes'] - 1, $result[0]['created_at']);
         }
 
         if (0 >= CW::$app->db->executeUpdate("UPDATE `updates` SET upvotes = upvotes - 1, `rate` = $rate WHERE `id` = $updateId")) {
@@ -556,7 +540,7 @@ class Update {
         $seconds = intval(($created_at - mktime(0, 0, 0, 1, 1, 1970)) / 8640);
 
         $long_number = (($order + $sign) == 0 ? 1 :($order + $sign)) * ($seconds);
-
+        
         return round($long_number, 7);
     }
 

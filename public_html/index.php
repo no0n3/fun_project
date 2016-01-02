@@ -1,5 +1,5 @@
 <?php
-$params = include('../config/params.php');
+$params = include( __DIR__ . '/../config/params.php');
 
 if (!defined('CW_ENV')) {
     define('CW_ENV', 'dev');
@@ -7,6 +7,10 @@ if (!defined('CW_ENV')) {
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-include '../CW.php';
+include __DIR__ . '/../CW.php';
 
-\App::run(['params' => $params]);
+\App::run(
+    ['params' => $params],
+    false, // not console application
+    isset($route) ? $route : $_SERVER['PATH_INFO']
+);

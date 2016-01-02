@@ -2,7 +2,7 @@
 namespace controllers;
 
 use CW;
-use models\Update;
+use models\User;
 use components\web\Controller;
 
 /**
@@ -26,14 +26,6 @@ class UserController extends BaseController {
                 'response_type' => 'text/html',
                 'roles' => [Controller::REQUIRED_LOGIN],
             ],
-            'changePassword' => [
-                'response_type' => 'text/html',
-                'roles' => [Controller::REQUIRED_LOGIN],
-            ],
-            'changePicture' => [
-                'response_type' => 'text/html',
-                'roles' => [Controller::REQUIRED_LOGIN],
-            ]
         ];
     }
 
@@ -48,6 +40,36 @@ class UserController extends BaseController {
     }
 
     public function doSettings() {
+        $result = $this->changeSettings(
+            \CW::$app->request->get('t')
+        );
+
+        CW::$app->db->close();
+
+        return $this->render('edit', $result);
+    }
+
+    private function changeSettings($type) {
+        if (!User::isValidSettingType($type)) {
+            $type = User::SETTINGS_PROFILE;
+        }
+
+        if (User::SETTINGS_PROFILE === $type) {
+            $result = $this->updateSettings();
+        } else if (User::SETTINGS_PASSWORD === $type) {
+            $result = $this->updatePassword();
+        } else if (User::SETTINGS_PICTURE === $type) {
+            $result = $this->updatePicture();
+        } else {
+            $result = [];
+        }
+
+        $result['settingType'] = $type;
+
+        return $result;
+    }
+
+    private function updateSettings() {
         $user = \models\User::findUser(CW::$app->user->identity->id);
 
         $form = new \models\forms\EditProfileForm();
@@ -57,6 +79,7 @@ class UserController extends BaseController {
         if (empty(CW::$app->request->post())) {
             $form->username = $user->username;
             $form->description = $user->description;
+            $success = false;
         } else if ($form->load(CW::$app->request->post()) && $form->save()) {
             $_SESSION['user']->username = $form->username;
             $success = true;
@@ -64,39 +87,16 @@ class UserController extends BaseController {
 
         $categories = \models\Category::getAllCategories();
 
-        CW::$app->db->close();
-
-        $settingType = \CW::$app->request->param('t');
-
-        return $this->render('edit', [
-            'model' => $form,
+        return [
+            'model'      => $form,
+            'success'    => $success,
             'categories' => $categories,
-            'settingType' => !in_array($settingType, ['profile', 'password', 'picture']) ? 'profile' : $settingType,
-            'success' => isset($success) ? $success : false
-        ]);
+        ];
     }
 
-    public function doChangePicture() {
-        $model = new \models\forms\ChangeProfilePicture();
-
-        $model->userId = \CW::$app->user->identity->id;
-
-        if (CW::$app->request->isPost() && $model->load(CW::$app->request->post()) &&
-            $model->save()
-        ) {
-            $success = true;
-        }
-
-        return $this->render('edit', [
-            'id' => CW::$app->request->get('id'),
-            'model' => $model,
-            'settingType' => 'picture',
-            'success' => !empty($success) ? $success : false
-        ]);
-    }
-
-    public function doChangePassword() {
+    private function updatePassword() {
         $model = new \models\forms\ChangePasswordForm();
+        $success = false;
 
         $model->userId = \CW::$app->user->identity->id;
 
@@ -106,12 +106,28 @@ class UserController extends BaseController {
             $success = true;
         }
 
-        return $this->render('edit', [
-            'id' => CW::$app->request->get('id'),
-            'model' => $model,
-            'settingType' => 'password',
-            'success' => isset($success) ? $success : false
-        ]);
+        return [
+            'model'   => $model,
+            'success' => $success
+        ];
+    }
+
+    private function updatePicture() {
+        $model = new \models\forms\ChangeProfilePicture();
+        $success = false;
+
+        $model->userId = \CW::$app->user->identity->id;
+
+        if (CW::$app->request->isPost() && $model->load(CW::$app->request->post()) &&
+            $model->save()
+        ) {
+            $success = true;
+        }
+
+        return [
+            'model'   => $model,
+            'success' => $success
+        ];
     }
 
 }

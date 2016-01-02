@@ -439,6 +439,11 @@ li {
 .header-username {
     color : white;
     vertical-align: middle;
+    max-width: 150px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .header-user-menu-item {

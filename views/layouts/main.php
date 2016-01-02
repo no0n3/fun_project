@@ -1,6 +1,7 @@
 <?php
 use CW;
 use models\Update;
+use components\UrlManager;
 
 $categoryName = CW::$app->request->get('category');
 $type = CW::$app->request->get('type');
@@ -23,6 +24,7 @@ if (
 
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link href="/css/app.css" rel="stylesheet" type="text/css">
+<link rel="shortcut icon" href="/images/logo.ico">
 <script>
 function sAjax(ajaxData, hasCsrf) {
     hasCsrf = undefined === hasCsrf ? true : hasCsrf;
@@ -79,17 +81,17 @@ $(function() {
         <ul class="category-list">
         <?php foreach ($this->categories as $category) : ?>
             <li class="category-item">
-                <a href="/<?= $category['name'] ?>/fresh" class="category-item-link header-menu-link"><?= $category['name'] ?></a>
+                <a href="<?= UrlManager::to(['site/index', 'type' => 'fresh', 'category' => $category['name']]) ?>" class="category-item-link header-menu-link"><?= htmlspecialchars($category['name']) ?></a>
             </li>
         <?php endforeach; ?>
         </ul>
     </div>
     <ul class="ul1">
         <li class="li1 <?= (!$categoryName && $type === Update::TYPE_TRENDING) ? 'li1-selected' : '' ?>">
-            <a href="/trending" class="category-type">Trending</a>
+            <a href="<?= UrlManager::to(['site/index', 'type' => 'trending']) ?>" class="category-type">Trending</a>
         </li>
         <li class="li1 <?= (!$categoryName && $type === Update::TYPE_FRESH) ? 'li1-selected' : '' ?>">
-            <a href="/fresh" class="category-type">Fresh</a>
+            <a href="<?= UrlManager::to(['site/index', 'type' => 'fresh']) ?>" class="category-type">Fresh</a>
         </li>
         <li class="li1">
             <a id="categories" href="#" class="category-type">Categories</a>
@@ -97,30 +99,30 @@ $(function() {
     </ul>
 
     <div class="search-cont">
-        <form action="/search">
+        <form action="<?= UrlManager::to(['site/search']) ?>">
             <span class="search-cont-1">
                 <button tyle="submit" class="search-btn"></button>
                 <input name="term" value="<?= CW::$app->request->get('term') ?>" class="search-inp" type="text" placeholder="search for...">
             </span>
         </form>
     </div>
-    
+
     <?php if (CW::$app->user->isLogged()) : ?>
     <div class="header-user-area-cont">
         <div id="user-menu-toggle">
             <img id="user-img" class="header-user-img" src="<?= CW::$app->user->identity->getProfilePicUrl() ?>" width="30px" height="30">
             <span class="header-username"><?= htmlspecialchars(CW::$app->user->identity->username) ?></span>
         </div>
-        <a href="/update/create" class="header-btn">submit</a>
+        <a href="<?= UrlManager::to(['update/create']) ?>" class="header-btn">submit</a>
     </div>
 
     <div id="user-menu" class="hidden">
         <ul class="category-list">
             <li class="category-item">
-                <a href="/profile/<?= CW::$app->user->identity->id ?>" class="header-user-menu-item header-menu-link">profile</a>
+                <a href="<?= UrlManager::to(['user/view', 'id' => CW::$app->user->identity->id]) ?>" class="header-user-menu-item header-menu-link">profile</a>
             </li>
             <li class="category-item">
-                <a href="/settings/profile" class="header-user-menu-item header-menu-link">settings</a>
+                <a href="<?= UrlManager::to(['user/settings', 't' => \models\User::SETTINGS_PROFILE]) ?>" class="header-user-menu-item header-menu-link">settings</a>
             </li>
             <li class="category-item">
                 <a id="logout-btn" class="header-user-menu-item header-menu-link" href="#">logout</a>
@@ -129,8 +131,8 @@ $(function() {
     </div>
     <?php else : ?>
     <div class="header-user-option-cont">
-        <a href="/signup" class="header-btn"> sign up </a>
-        <a href="/login" class="header-btn"> login </a>
+        <a href="<?= UrlManager::to(['site/signUp']) ?>" class="header-btn"> sign up </a>
+        <a href="<?= UrlManager::to(['site/login']) ?>" class="header-btn"> login </a>
     </div>
     <?php endif; ?>
 </div>

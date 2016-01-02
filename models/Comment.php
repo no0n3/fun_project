@@ -59,21 +59,21 @@ class Comment {
         CW::$app->db->beginTransaction();
 
         if (null !== $replyTo) {
-            $query = "INSERT INTO `comments` (`user_id`, `update_id`, `content`, `reply_to`, `created_at`) VALUES (:user_id, :update_id, :content, :reply_to, :created_at)";
+            $query = "INSERT INTO `comments` (`user_id`, `update_id`, `content`, `reply_to`, `posted_on`) VALUES (:user_id, :update_id, :content, :reply_to, :posted_on)";
             $params = [
                 ':user_id'    => $userId,
                 ':update_id'  => $updateId,
                 ':content'    => $content,
                 ':reply_to'   =>  $replyTo,
-                ':created_at' => time()
+                ':posted_on' => time()
             ];
         } else {
-            $query = "INSERT INTO `comments` (`user_id`, `update_id`, `content`, `created_at`) VALUES (:user_id, :update_id, :content, :created_at)";
+            $query = "INSERT INTO `comments` (`user_id`, `update_id`, `content`, `posted_on`) VALUES (:user_id, :update_id, :content, :posted_on)";
             $params = [
                 ':user_id'    => $userId,
                 ':update_id'  => $updateId,
                 ':content'    => $content,
-                ':created_at' => time()
+                ':posted_on' => time()
             ];
         }
 

@@ -1,5 +1,6 @@
 <?php
 use components\helpers\ArrayHelper;
+use components\UrlManager;
 
 $type = CW::$app->request->get('type');
 ?>
@@ -11,7 +12,7 @@ $(function() {
         updatesCont : document.getElementById('updates-cont'),
         loadingEle  : document.getElementById('loading'),
         noResultEle : document.getElementById('no-results-found'),
-        url : "/ajax/update/load",
+        url : <?= json_encode(\components\UrlManager::to(['update/ajaxLoad'])) ?>,
         ajaxData : {
             category : App.update.category,
             type : '<?= \models\Update::isValidType($type) ? $type : \models\Update::TYPE_FRESH ?>'
@@ -29,10 +30,10 @@ $(function() {
                 <?= htmlspecialchars($category) ?>
             </h2>
             <div class="category-types">
-                <a  class="updates-type <?= \models\Update::TYPE_TRENDING === $type ? 'updates-type-selected' : '' ?>" href="/<?= htmlspecialchars($category) ?>/trending">trending</a>
+                <a  class="updates-type <?= \models\Update::TYPE_TRENDING === $type ? 'updates-type-selected' : '' ?>" href="<?= UrlManager::to(['site/index', 'type' => 'trending', 'category' => $category]) ?>">trending</a>
                 <a class="updates-type <?= (\models\Update::TYPE_FRESH === $type || !in_array($type, [
                     \models\Update::TYPE_FRESH, \models\Update::TYPE_TRENDING
-                ])) ? 'updates-type-selected' : '' ?>" href="/<?= htmlspecialchars($category) ?>/fresh">fresh</a>
+                ])) ? 'updates-type-selected' : '' ?>" href="<?= UrlManager::to(['site/index', 'type' => 'fresh', 'category' => $category]) ?>">fresh</a>
             </div>
         </div>
     </div>

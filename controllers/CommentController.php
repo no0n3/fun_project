@@ -3,27 +3,25 @@ namespace controllers;
 
 use CW;
 use components\web\Controller;
-use components\helpers\ImageHelper;
 
 /**
  * @author Velizar Ivanov <zivanof@gmail.com>
  */
 class CommentController extends Controller {
 
-
     public function rules() {
         $rules = parent::rules();
 
         $rules[Controller::ALL] = [
-                'response_type' => 'application/json',
-                'roles' => [Controller::REQUIRED_LOGIN],
-                'methods' => ['post']
-            ];
+            'response_type' => 'application/json',
+            'roles' => [Controller::REQUIRED_LOGIN],
+            'methods' => ['post']
+        ];
         $rules['load'] = [
-                'response_type' => 'application/json',
-                'roles' => [Controller::ALL],
-                'methods' => ['get']
-            ];
+            'response_type' => 'application/json',
+            'roles' => [Controller::ALL],
+            'methods' => ['get']
+        ];
         $rules['loadReplies'] = [
             'response_type' => 'application/json',
             'roles' => [Controller::ALL],

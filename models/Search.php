@@ -23,7 +23,9 @@ class Search {
             return [];
         }
 
-        $query = "SELECT u.* FROM updates u JOIN (SELECT distinct update_id FROM update_tags WHERE tag_id IN (" . ArrayHelper::getArrayToString($tagIds, ',')
+        $query = "SELECT u.*,"
+                . (CW::$app->user->isLogged() ? ("0 < (SELECT count(*) FROM `update_upvoters` WHERE `update_id` = `u`.`id` AND `user_id` = " . CW::$app->user->identity->id . ") ") : ' false ')
+                . " `voted` FROM updates u JOIN (SELECT distinct update_id FROM update_tags WHERE tag_id IN (" . ArrayHelper::getArrayToString($tagIds, ',')
                 . ") LIMIT 10 OFFSET " . (10 * $page) . ") ut ON ut.update_id = u.id ORDER BY u.rate DESC, u.created_at DESC";
 
         $stmt = CW::$app->db->executeQuery($query);
@@ -52,7 +54,7 @@ class Search {
                 $updates[$i]['tags'] = $tags;
             }
         }
-        
+
         Image::setUpdateImages($updates);
 
         return $updates;

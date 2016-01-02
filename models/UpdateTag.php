@@ -3,6 +3,7 @@ namespace models;
 
 use CW;
 use components\helpers\ArrayHelper;
+use components\UrlManager;
 
 /**
  * 
@@ -27,6 +28,9 @@ class UpdateTag {
         $r = [];
 
         foreach ($result as $item) {
+            $item['url']  = UrlManager::to(['site/search', 'term' => $item['name']]);
+            $item['name'] = htmlspecialchars($item['name']);
+
             if (!isset( $r[$item['update_id']] )) {
                 $r[ $item['update_id'] ] = [$item];
             } else {
@@ -51,7 +55,9 @@ class UpdateTag {
 
         $stmt = CW::$app->db->executeQuery("SELECT t.name, t.id, ut.update_id FROM tags t JOIN update_tags ut ON t.id = ut.tag_id WHERE ut.update_id = $updateId");
 
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $result;
     }
 
 }

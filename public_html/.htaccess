@@ -1,30 +1,26 @@
 RewriteEngine On
 
 Rewritecond %{HTTP_HOST} ^vinteres\.com
-#RewriteRule ^(.*)$ http://vinteres.com/$1 [R=301,L]
+#RewriteRule ^(.*)$ http://www.vinteres.com/$1 [R=301,L]
 
-RewriteRule ^search$ index.php/site/search
-RewriteRule ^ajax/search$ index.php/site/ajaxSearch
-RewriteRule ^ajax/update/load index.php/update/ajaxLoad
-RewriteRule ^ajax/user/activity index.php/update/ajaxUserUpdates
-RewriteRule ^(fresh|trending)$ index.php/site/index?type=$1
-RewriteRule ^login$ index.php/site/login
-RewriteRule ^logout$ index.php/site/logout
-RewriteRule ^signup$ index.php/site/signUp
-RewriteRule ^profile/edit$ index.php/user/edit
-RewriteRule ^profile/(\d+)$ index.php/user/view?id=$1
-RewriteRule ^profile/(\d+)/(.+)$ index.php/user/view?id=$1&type=$2
-RewriteRule ^settings/profile$ index.php/user/settings?t=profile
-RewriteRule ^settings/password$ index.php/user/changePassword
-RewriteRule ^settings/picture$ index.php/user/changePicture
-RewriteRule ^update/(\d+)$ index.php/update/view?id=$1
-RewriteRule ^([a-zA-Z]+)/update/(\d+)$ index.php/update/view?id=$2&category=$1
-RewriteRule ^([a-zA-Z]+)/(fresh|trending)$ index.php/site/index?category=$1&type=$2
-RewriteRule ^([a-zA-Z0-9_]+)/([a-zA-Z0-9_]+)$ index.php/$1/$2
-RewriteRule ^([a-zA-Z]+)$ index.php/site/index?category=$1
+#RewriteRule ^search$ index.php/site/search
+#RewriteRule ^ajax/search$ index.php/site/ajaxSearch
+#RewriteRule ^ajax/update/load index.php/update/ajaxLoad
+#RewriteRule ^ajax/user/activity index.php/update/ajaxUserUpdates
+#RewriteRule ^(fresh|trending)$ index.php/site/index?type=$1
+#RewriteRule ^login$ index.php/site/login
+#RewriteRule ^logout$ index.php/site/logout
+#RewriteRule ^signup$ index.php/site/signUp
+#RewriteRule ^profile/edit$ index.php/user/edit
+#RewriteRule ^profile/(\d+)$ index.php/user/view?id=$1
+#RewriteRule ^profile/(\d+)/(.+)$ index.php/user/view?id=$1&type=$2
+#RewriteRule ^settings/profile$ index.php/user/settings?t=profile
+#RewriteRule ^settings/password$ index.php/user/changePassword
+#RewriteRule ^settings/picture$ index.php/user/changePicture
+#RewriteRule ^update/(\d+)$ index.php/update/view?id=$1
+#RewriteRule ^([a-zA-Z]+)/update/(\d+)$ index.php/update/view?id=$2&category=$1
+#RewriteRule ^([a-zA-Z]+)/(fresh|trending)$ index.php/site/index?category=$1&type=$2
+#RewriteRule ^([a-zA-Z0-9_]+)/([a-zA-Z0-9_]+)$ index.php/$1/$2
+#RewriteRule ^([a-zA-Z]+)$ index.php/site/index?category=$1
 
-ErrorDocument 400 /img.jpg
-ErrorDocument 401 /img.jpg
-ErrorDocument 403 /img.jpg
-ErrorDocument 404 /sample/img.jpg
-ErrorDocument 500 /img.jpg
+ErrorDocument 404 http://vinteres.com/error/not-found.php

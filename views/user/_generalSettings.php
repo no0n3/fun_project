@@ -1,6 +1,6 @@
 <h2> Edit Profile </h2>
 <div class="start-page-cont" style="padding: 15px;">
-<form action="/index.php/user/settings?t=profile" id="f1" method="post">
+<form id="f1" method="post">
     <div class="field-sep">
         <div>
             <span> Username: </span>

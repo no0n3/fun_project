@@ -5,8 +5,9 @@ use components\web\Response;
 use components\Security;
 use components\exceptions\ForbiddenException;
 use components\exceptions\WrongMethodException;
-use components\web\Controller;
 use components\exceptions\ErrorException;
+use components\exceptions\NotFoundException;
+use components\web\Controller;
 
 class App extends \classes\Object {
 
@@ -28,19 +29,23 @@ class App extends \classes\Object {
 
     public function __get($name) {
         static $comps = [];
+
         if ($this->hasProperty($name)) {
             if ('db' === $name) {
                 if (null === $this->$name) {
                     $this->$name = new \components\db\DBConnection();
                 }
             }
+
             return $this->$name;
         } else if (isset($this->components[$name])) {
             if (!isset($comps[$name])) {
                 $comps[$name] = new $this->components[$name]['class']();
             }
+
             return $comps[$name];
         }
+
         return null;
     }
 
@@ -56,11 +61,13 @@ class App extends \classes\Object {
         if (null === self::$inst) {
             self::$inst = new self();
         }
+
         return self::$inst;
     }
 
-    public static function run($config = [], $isConsoleApp = false) {
+    public static function run($config = [], $isConsoleApp = false, $path = '') {
         static $inst = null;
+
         if (null === $inst) {
             $inst = new self($isConsoleApp);
 
@@ -70,7 +77,7 @@ class App extends \classes\Object {
             $inst->params = isset($config['params']) ? $config['params'] : [];
 
             if (!$isConsoleApp) {
-                $inst->dispatch($inst->getPath($_SERVER['PATH_INFO']));
+                $inst->dispatch($inst->getPath($path));
             }
         }
     }
@@ -115,8 +122,8 @@ HTML;
             }
         });
         set_exception_handler(function($e) {
-            \CW::$app->db->rollback();
-            \CW::$app->db->close();
+            $this->__get('db')->rollback();
+            $this->__get('db')->close();
 
             ob_clean();
 
@@ -124,19 +131,25 @@ HTML;
 
             try {
                 if ('prod' !== CW_ENV) {
-                    echo '<div>';
-                    echo "<div>error_no = " . $e->getCode() . '</div>';
-                    echo "<div>error    = " . $e->getMessage() . '</div>';
-                    echo "<div>file     = " . $e->getFile() . '</div>';
-                    echo "<div>line     = " . $e->getLine() . '</div>';
-                    echo "<div>trace    = " . $e->getTraceAsString() . '</div>';
-                    echo '</div>';
+                    echo '<h1>EXCEPTION:</h1><pre>';
+                    var_dump($e);
+                    echo '</pre>';
 
-                    echo '<pre>';
+                    echo '<br/><br/><br/><h1>STACK TRACE:</h1><pre>';
                     print_r(debug_backtrace());
                     echo '</pre>';
                 } else {
-                    $this->dispatch('site/error');
+                    if (null === $this->controllerInst) {
+                        $this->controllerInst = new \controllers\BaseController();
+                    }
+
+                    echo $this->renderView(
+                        $this->controllerInst->doError($e),
+                        $this->controllerInst->actionId,
+                        $this->controllerInst->id
+                    );
+
+                    exit;
                 }
             } catch (\Exception $e) {
                 echo 'An error occurred while processing another error.';
@@ -180,16 +193,30 @@ HTML;
         $contrName[0] = chr(ord($contrName) ^ 32);
         $action = $actionName = $route['action'];
         $actionName[0] = chr(ord($actionName) ^ 32);
-        $controllerClass = "\\controllers\\{$contrName}Controller";
+        $controllerClass = "controllers\\{$contrName}Controller";
+
+        $classPath = CW::$app->params['sitePath'] . str_replace('\\', '/', $controllerClass) . '.php';
+
+        if (!file_exists($classPath)) {
+            throw new NotFoundException();
+        }
+
+        $controllerClass = "\\{$controllerClass}";
 
         $this->controllerInst = new $controllerClass($contrId, $action);
+
+        $actionMethod = "do{$actionName}";
+
+        if (!$this->controllerInst->hasMethod($actionMethod)) {
+            throw new NotFoundException();
+        }
 
         $rules = $this->controllerInst->rules();
 
         $actionRules = isset($rules[$action]) ? $rules[$action] :
             (isset($rules['*']) ? $rules['*'] : null);
 
-        if ($actionRules) {
+        if (null !== $actionRules) {
             if (isset($actionRules['response_type'])) {
                 $this->controllerInst->responseType = $actionRules['response_type'];
 
@@ -208,6 +235,7 @@ HTML;
             ) {
                 if (!$this->request->isAjax()) {
                     $this->controllerInst->forward('site/login');
+
                     return;
                 }
 
@@ -226,14 +254,12 @@ HTML;
             throw new ForbiddenException();
         }
 
-        $action = "do{$actionName}";
+        $view = $this->controllerInst->{$actionMethod}();
 
-        if (!$this->controllerInst->hasMethod($action)) {
-            throw new \components\exceptions\NotFoundException();
-        }
+        $this->renderView($view, $action, $contrName);
+    }
 
-        $view = $this->controllerInst->{$action}();
-
+    private function renderView($view, $action, $contrName) {
         if ($this->controllerInst->responseType === 'text/html') {
             if ($view) {
                 $layout = null === $this->controllerInst->layout ? \components\web\Controller::DEFAULT_LAYOUT : $this->controllerInst->layout;

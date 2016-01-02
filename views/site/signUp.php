@@ -5,7 +5,7 @@ use components\web\widgets\Form;
     <?php if ($success) : ?>
     <div class="success">
         <i class="fa fa-check-circle"></i>
-        <span class="success-msg">You have successfully signed up! <a class="success-link" href="/login">Click here</a> login.</span>
+        <span class="success-msg">You have successfully signed up! <a class="success-link" href="<?= \components\UrlManager::to(['site/login']) ?>">Click here</a> login.</span>
     </div>
     <?php else : ?>
     <h2 class="header-title">Sign up</h2>
