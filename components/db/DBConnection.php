@@ -7,11 +7,6 @@ namespace components\db;
 class DBConnection {
     private $con;
 
-    private $SERVER_NAME = 'localhost';
-    private $DB_USERNAME = 'root';
-    private $DB_PASSWORD = 'velizar1';
-    private $DB_NAME     = 'cw2';
-
     private $inTransaction = false;
 
     /**
@@ -82,7 +77,16 @@ class DBConnection {
      * 
      */
     private function connectToMySQL() {
-        $this->con = new \PDO("mysql:host={$this->SERVER_NAME};dbname={$this->DB_NAME}", $this->DB_USERNAME, $this->DB_PASSWORD);
+        $this->con = new \PDO(
+            sprintf(
+                "mysql:host=%s;dbname=%s",
+                \CW::$app->params['dbServerName'],
+                \CW::$app->params['dbName']
+            ),
+            \CW::$app->params['dbUsername'],
+            \CW::$app->params['dbPassword']
+        );
+
         $this->con->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 

@@ -1,5 +1,8 @@
 <?php
-$params = include( __DIR__ . '/../config/params.php');
+$params = array_merge(
+    include( __DIR__ . '/../config/params.php'),
+    include( __DIR__ . '/../config/local-params.php')
+);
 
 if (!defined('CW_ENV')) {
     define('CW_ENV', 'dev');

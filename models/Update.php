@@ -40,8 +40,13 @@ class Update {
         return in_array($type, [self::TYPE_FRESH, self::TYPE_TRENDING]);
     }
 
-    public static function getUpdates($page, $categoryId = null, $type = self::TYPE_FRESH) {
-        $page = ($page ? ($page * self::UPDATES_LOAD_COUNT) : 0);
+    public static function getUpdates(
+        $page,
+        $categoryId = null,
+        $type = self::TYPE_FRESH,
+        $categoryName = null
+    ) {
+        $page = (is_numeric($page) ? ($page * self::UPDATES_LOAD_COUNT) : 0);
 
         if (!self::isValidType($type)) {
             $type = self::TYPE_FRESH;
@@ -84,7 +89,7 @@ class Update {
         for ($i = 0; $i < $updatesCount; $i++) {
             $updates[$i]['description'] = htmlspecialchars($updates[$i]['description']);
             $updates[$i]['imgUrl'] = '/images/updates/' . $updates[$i]['id'] . '/' . self::IMAGE_MEDIUM_WIDTH . 'xX.jpeg';
-            $updates[$i]['updateUrl'] = self::getUpdateUrl($updates[$i]['id']);
+            $updates[$i]['updateUrl'] = self::getUpdateUrl($updates[$i]['id'], $categoryName);
             $updates[$i]['postedAgo'] = BaseModel::getPostedAgoTime($updates[$i]['created_at']);
             $updates[$i]['created_at'] = strtotime($updates[$i]['created_at']);
             $updates[$i]['voted'] = (bool) $updates[$i]['voted'];
@@ -371,8 +376,10 @@ class Update {
         return '/images/updates/' . $updateId . '/' . $size . 'xX.jpeg';
     }
 
-    public static function getUpdateUrl($updateId) {
-        return UrlManager::to(['update/view', 'id' => $updateId]);
+    public static function getUpdateUrl($updateId, $categoryName = null) { 
+        return null !== $categoryName ?
+            UrlManager::to(['update/view', 'id' => $updateId, 'category' => $categoryName])
+            : UrlManager::to(['update/view', 'id' => $updateId]);
     }
 
     public static function upvote($updateId, $userId) {

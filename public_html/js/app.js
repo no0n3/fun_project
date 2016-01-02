@@ -145,9 +145,9 @@ var App = {
             var updateLinkCont = document.createElement('h3');
             updateLinkCont.setAttribute('class', 'update-title-list');
             updateLinkCont.setAttribute('style', 'display : inline-block;');
-            
-            var updateUrl = (App.update.category ? ('/' + App.update.category) : '') + data.updateUrl;
-            
+
+            var updateUrl = data.updateUrl;
+
             updateLink1.setAttribute('href', updateUrl);
             updateLink1.setAttribute('class', 'update-link');
 

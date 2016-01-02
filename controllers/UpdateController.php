@@ -154,7 +154,8 @@ class UpdateController extends BaseController {
         $result = Update::getUpdates(
             CW::$app->request->get('page'),
             Category::getIdByName(CW::$app->request->get('category')),
-            CW::$app->request->get('type')
+            CW::$app->request->get('type'),
+            CW::$app->request->get('category')
         );
 
         CW::$app->db->close();

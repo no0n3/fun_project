@@ -1,6 +1,6 @@
 RewriteEngine On
 
-Rewritecond %{HTTP_HOST} ^vinteres\.com
+Rewritecond %{HTTP_HOST} ^fun.zivanof\.com
 #RewriteRule ^(.*)$ http://www.vinteres.com/$1 [R=301,L]
 
 #RewriteRule ^search$ index.php/site/search
@@ -23,4 +23,4 @@ Rewritecond %{HTTP_HOST} ^vinteres\.com
 #RewriteRule ^([a-zA-Z0-9_]+)/([a-zA-Z0-9_]+)$ index.php/$1/$2
 #RewriteRule ^([a-zA-Z]+)$ index.php/site/index?category=$1
 
-ErrorDocument 404 http://vinteres.com/error/not-found.php
+ErrorDocument 404 http://fun.zivanof.com/error/not-found.php
