@@ -15,5 +15,5 @@ include __DIR__ . '/../CW.php';
 \App::run(
     ['params' => $params],
     false, // not console application
-    isset($route) ? $route : $_SERVER['PATH_INFO']
+    isset($route) ? $route : (isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : 'site/index')
 );

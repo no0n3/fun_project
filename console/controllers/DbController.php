@@ -201,7 +201,6 @@ QUERY
             CREATE TABLE IF NOT EXISTS `user_update_activity` (
             `user_id` bigint(20) NOT NULL,
             `update_id` bigint(20) NOT NULL,
-            `activity_type` tinyint(4) NOT NULL,
             `time` INT NOT NULL,
             `type_posted` bit(1) NOT NULL DEFAULT b'0',
             `type_upvoted` bit(1) NOT NULL DEFAULT b'0',

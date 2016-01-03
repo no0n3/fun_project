@@ -94,7 +94,7 @@ class App extends \classes\Object {
         $this->response = Response::getInstance();
 
         set_error_handler(function($errno, $errstr, $errfile, $errline) {
-            if ('dev' === VI_ENV) {
+            if ('dev' === CW_ENV) {
                 if ($this->isConsoleApp) {
                     if (in_array($errno, [E_USER_WARNING, E_WARNING])) {
                         $errType = "WARNING";
@@ -125,7 +125,9 @@ HTML;
             $this->__get('db')->rollback();
             $this->__get('db')->close();
 
-            ob_clean();
+            if (ob_get_length()) {
+                ob_clean();
+            }
 
             $this->response->setContentType('text/html');
 

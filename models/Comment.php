@@ -45,12 +45,12 @@ class Comment {
                 return false;
             }
 
-            $stmt = CW::$app->db->executeQuery('SELECT `reply_to` FROM `comments` WHERE `update_id` = ' . (int) $updateId);
+            $stmt = CW::$app->db->executeQuery('SELECT `reply_to` FROM `comments` WHERE `update_id` = ' . $updateId);
 
             $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
             if (0 < count($result)) {
-                if (null !== $result['reply_to'] && null !== $replyTo) {
+                if (null !== $result[0]['reply_to'] && null !== $replyTo) {
                     return false;
                 }
             }
@@ -136,7 +136,6 @@ class Comment {
                 'username' => $result[$i]->ownerUsername,
                 'profileUrl' => \models\User::getProfileUrl($result[$i]->ownerId)
             ];
-            $result[$i]->username = htmlspecialchars($result[$i]->username);
             $result[$i]->content = htmlspecialchars($result[$i]->content);
             $result[$i]->postedAgo = BaseModel::getPostedAgoTime($result[$i]->posted_on);
             $result[$i]->voted = (bool) $result[$i]->voted;
@@ -151,7 +150,6 @@ class Comment {
                 $_replies[$replies[$j]->reply_to] = $replies[$j]->id;
 
                 $_comments[$replies[$j]->user_id][] = $replies[$j];
-                $replies[$j]->username = htmlspecialchars($replies[$j]->username);
                 $replies[$j]->content = htmlspecialchars($replies[$j]->content);
                 $replies[$j]->postedAgo = BaseModel::getPostedAgoTime($replies[$j]->posted_on);
                 $replies[$j]->voted = (bool) $replies[$j]->voted;

@@ -295,7 +295,7 @@ class Update {
         }
 
         if (!empty($category)) {
-            $stmt = CW::$app->db->prepare("SELECT u.`created_at`, u.`upvotes`, u.upvotes, uc.category_id FROM `updates` u JOIN `update_categories` uc ON uc.update_id = u.id JOIN categories c ON c.id = uc.category_id WHERE u.`id` = :id AND c.name = :categoryName");
+            $stmt = CW::$app->db->prepare("SELECT u.`created_at`, u.`upvotes`, u.`rate`, uc.category_id FROM `updates` u JOIN `update_categories` uc ON uc.update_id = u.id JOIN categories c ON c.id = uc.category_id WHERE u.`id` = :id AND c.name = :categoryName");
             $stmt->execute([
                 ':id' => $id,
                 ':categoryName' => $category
@@ -360,7 +360,7 @@ class Update {
         }
 
         if (!empty($category)) {
-            $stmt = CW::$app->db->prepare("SELECT u.`created_at`, u.`upvotes`, u.upvotes, uc.category_id FROM `updates` u JOIN `update_categories` uc ON uc.update_id = u.id JOIN categories c ON c.id = uc.category_id WHERE u.`id` = :id AND c.name = :categoryName");
+            $stmt = CW::$app->db->prepare("SELECT u.`created_at`, u.`upvotes`, u.`rate`, uc.category_id FROM `updates` u JOIN `update_categories` uc ON uc.update_id = u.id JOIN categories c ON c.id = uc.category_id WHERE u.`id` = :id AND c.name = :categoryName");
             $stmt->execute([
                 ':id' => $id,
                 ':categoryName' => $category
@@ -494,7 +494,9 @@ class Update {
         $stmt = CW::$app->db->executeQuery("SELECT type_posted, type_upvoted, type_commented FROM user_update_activity WHERE user_id = $userId AND update_id = $updateId");
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-        if (0 >= count($result)) {
+        $result = 0 === count($result) ? null : $result[0];
+
+        if (null === $result) {
             // add new
             if (static::ACTIVITY_TYPE_UPVOTE == $activityType) {
                 $set = "0,1,0";

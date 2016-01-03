@@ -66,7 +66,7 @@ class CommentController extends Controller {
         if ($result) {
             $result->owner = [
                 'id' => CW::$app->user->identity->id,
-                'username' => CW::$app->user->identity->username,
+                'username' => htmlspecialchars(CW::$app->user->identity->username),
                 'profileUrl' => \models\User::getProfileUrl(CW::$app->user->identity->id),
                 'pictureUrl' => CW::$app->user->identity->getProfilePicUrl()
             ];

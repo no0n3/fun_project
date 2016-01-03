@@ -1,5 +1,4 @@
 <?php
-use CW;
 use models\Update;
 use components\UrlManager;
 use components\helpers\ArrayHelper;
@@ -15,6 +14,7 @@ if (
     $type = Update::TYPE_FRESH;
 }
 
+$csrfHash = isset($_SESSION['_csrf']) ? \components\Security::hash($_SESSION['_csrf']) : null
 ?>
 <!DOCTYPE html>
 <html>
@@ -40,14 +40,14 @@ function sAjax(ajaxData, hasCsrf) {
     hasCsrf = undefined === hasCsrf ? true : hasCsrf;
 
     if (hasCsrf) {
-        ajaxData.data._csrf = '<?= isset($_SESSION['_csrf']) ? \components\Security::hash($_SESSION['_csrf']) : null ?>';
+        ajaxData.data._csrf = '<?= $csrfHash ?>';
     }
 
     return $.ajax(ajaxData);
 }
 
 $(function() {
-    App.user.csrfToken = '<?= \components\Security::hash($_SESSION['_csrf']) ?>';
+    App.user.csrfToken = '<?= $csrfHash ?>';
     App.user.id = <?= CW::$app->user->isLogged() ? CW::$app->user->identity->id : 'null' ?>;
 
     var categoriesMenuButton = document.getElementById('categories');

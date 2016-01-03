@@ -19,7 +19,9 @@ class User {
     private $_tested;
 
     public function __construct() {
-        $this->identity = $_SESSION[self::LOGGED_USER];
+        $this->identity = isset($_SESSION[self::LOGGED_USER]) ?
+            $_SESSION[self::LOGGED_USER]:
+            null;
     }
 
     public function isLogged() {
@@ -132,6 +134,8 @@ class User {
         if ($this->isLogged()) {
             return true;
         }
+
+        $loginSuccess = false;
 
         $stmt = \CW::$app->db->prepare('SELECT id, username, email, password, profile_img_id FROM `users` WHERE `email` = :email');
         $stmt->execute([

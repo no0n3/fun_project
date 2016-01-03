@@ -145,7 +145,7 @@ $(function() {
     <?php else : ?>
     <h1> Create Update </h1>
     <div style="padding: 15px;" class="start-page-cont">
-    <form id="f1" method="post" enctype="multipart/form-data">
+    <form id="f1" method="post" enctype="multipart/form-data" accept="image/*">
         <div class="field-sep">
             <div>
                 <span> Title: </span>

@@ -25,8 +25,12 @@ class ChangeProfilePicture extends \models\BaseModel {
         $imageDg = $this->image->getImage();
         $ext = "jpeg";
 
-        $userDir = CW::$app->params['sitePath'] . 'public_html/images/users/' . $this->userId;
+        $usersDir = CW::$app->params['sitePath'] . 'public_html/images/users';
+        $userDir = "$usersDir/{$this->userId}";
 
+        if (!is_dir($usersDir)) {
+            mkdir($usersDir);
+        }
         if (!is_dir($userDir)) {
             mkdir($userDir);
         }

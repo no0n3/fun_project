@@ -57,12 +57,11 @@ class CreateUpdateForm extends \models\BaseModel {
         $imageDg = $this->image->getImage();
         $ext = "jpeg";
 
-        $stmt = CW::$app->db->prepare("INSERT INTO `updates` (`user_id`, `description`, `is_gif`, `created_at`) VALUES (:userId, :description, :is_gif, :created_at)");
+        $stmt = CW::$app->db->prepare("INSERT INTO `updates` (`user_id`, `description`, `is_gif`, `created_at`) VALUES (:userId, :description, ".($this->image->isGif() ? 1 : 0).", :created_at)");
 
         if (0 >= $stmt->execute([
             ':userId'      => \CW::$app->user->identity->id,
             ':description' =>  $this->title,
-            ':is_gif'      => $this->image->isGif(),
             ':created_at'  => time()
         ])) {
             return false;

@@ -1,6 +1,6 @@
 <h2>Change Profile Picture</h2>
 <div class="start-page-cont" style="padding: 15px;">
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" accept="image/*">
     <div class="field-sep">
         <div>
             <span> Profile Picture: </span>

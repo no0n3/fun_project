@@ -74,7 +74,7 @@ class SiteController extends BaseController {
 
     public function doLogin() {
         if (CW::$app->user->isLogged()) {
-            return $this->redirect('index');
+            return $this->redirect(\components\UrlManager::to(['site/index']));
         }
 
         $form = new \models\forms\LoginForm();
@@ -86,7 +86,7 @@ class SiteController extends BaseController {
                     $form->password
                 )
             ) {
-                $this->redirect('/');
+                $this->redirect(\components\UrlManager::to(['site/index']));
             } else {
                 $form->addError('password', 'Invalid username or password.');
             }
@@ -115,7 +115,7 @@ class SiteController extends BaseController {
         }
 
         return $this->render('signUp', [
-            'success' => $success,
+            'success' => isset($success) ? $success : false,
             'model' => $form
         ]);
     }
@@ -124,7 +124,7 @@ class SiteController extends BaseController {
         CW::$app->user->isLogged();
         CW::$app->user->logout();
 
-        $this->redirect('login');
+        $this->redirect(\components\UrlManager::to(['site/index']));
     }
 
     public function redirect($path) {

@@ -27,7 +27,7 @@ abstract class BaseModel extends \classes\Object {
             $modelData = $data;
         } else {
             $keyName = null !== $keyName ? $keyName : $this->getClassName(false);
-            $modelData = $data[$keyName];
+            $modelData = isset($data[$keyName]) ? $data[$keyName] : [];
         }
 
         if (empty($modelData)) {

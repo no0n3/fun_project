@@ -1,14 +1,14 @@
 <?php
 include ('CW.php');
-define('VI_ENV', 'dev');
 
-$paramsGl = include('config/params.php');
+$paramsGl = array_merge(
+    include( __DIR__ . '/config/params.php'),
+    include( __DIR__ . '/config/local-params.php')
+);
 
-spl_autoload_register(function($className) {
-    global $paramsGl;
-    $className = str_replace('\\', '/', $className);
-    include $paramsGl['sitePath'] . $className . '.php';
-});
+if (!defined('CW_ENV')) {
+    define('CW_ENV', 'dev');
+}
 
 \App::run([
     'params' => $paramsGl
