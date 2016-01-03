@@ -259,22 +259,23 @@ HTML;
         $this->renderView($view, $action, $contrName);
     }
 
-    private function renderView($view, $action, $contrName) {
+    private function renderView($content, $action, $contrName) {
         if ($this->controllerInst->responseType === 'text/html') {
-            if ($view) {
+            if ($content) {
                 $layout = null === $this->controllerInst->layout ? \components\web\Controller::DEFAULT_LAYOUT : $this->controllerInst->layout;
 
                 echo $this->controllerInst->view->renderView(
                     \CW::$app->params['sitePath'] . "/views/layouts/$layout.php",
                     [
-                        'view' => $view,
+                        'content' => $content,
                         'action' => $action,
-                        'controller' => $contrName
+                        'controller' => $contrName,
+                        'view' => $this->controllerInst->view
                     ]
                 );
             }
         } else {
-            echo $view;
+            echo $content;
         }
     }
 

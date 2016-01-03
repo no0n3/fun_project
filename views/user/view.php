@@ -10,6 +10,9 @@ use components\UrlManager;
     </div>
 </div>
 <?php else : ?>
+<?php
+$this->title = $model['username'] . ' - ' . CW::$app->params['siteName'];
+?>
 <script>
 $(function() {
     var updateLoader = App.update.Loader({

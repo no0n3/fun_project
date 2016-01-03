@@ -1,5 +1,7 @@
 <?php
 use components\web\widgets\Form;
+
+$this->title = 'Login - ' . \CW::$app->params['siteName'];
 ?>
 <div class="start-page">
     <h2 class="header-title">Login</h2>

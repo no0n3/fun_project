@@ -9,7 +9,33 @@ use components\UrlManager;
     </div>
 </div>
 <?php else : ?>
+<?php
+$this->registerMetaTag([
+    'property' => 'og:image',
+    'content'  => CW::$app->params['siteUrl'] . ($update['is_gif'] ?
+        "/images/updates/{$update['id']}/poster.jpeg"
+        : $update['imageUrl'])
+]);
+$this->registerMetaTag([
+    'property' => 'og:url',
+    'content'  => UrlManager::to(['update/view', 'id' => $update['id']], true)
+]);
+$this->registerMetaTag([
+    'property' => 'og:title',
+    'content'  => $update['description']
+]);
+$this->registerMetaTag([
+    'property' => 'og:description',
+    'content'  => '...'
+]);
 
+$this->registerMetaTag([
+    'property' => 'description',
+    'content'  => $update['description']
+]);
+
+$this->title = $update['description'] . ' - ' . CW::$app->params['siteName'];
+?>
 <script>
 var commentCreator;
 
@@ -163,8 +189,7 @@ padding: 1px 5px;"><?= htmlspecialchars($category['name']) ?></a>
         outline: 1px solid #ddd; background-color: black;">
         <?php if ($update['is_gif']) : ?>
         <video poster="/images/updates/<?= $update['id'] ?>/poster.jpeg" style="min-height:209.78260869565px;width: 500px; vertical-align: top;" width="500"
-        loop muted autoplay="true"
-        >
+        loop muted autoplay="true">
             <source src="/images/updates/<?= $update['id'] ?>/medium.mp4">
             <source src="/images/updates/<?= $update['id'] ?>/medium.webm">
         </video>

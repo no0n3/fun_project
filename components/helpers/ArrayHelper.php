@@ -28,11 +28,10 @@ class ArrayHelper {
 
     public static function getArrayToString($a, $sep, $each = null) {
         $_a = [];
-        if (null !== $each) {
-            $c = count($a);
 
-            for ($i = 0; $i < $c; $i++) {
-                $_a[] = $each($a[$i]);
+        if (null !== $each) {
+            foreach ($a as $k => $v) {
+                $_a[] = $each($v, $k);
             }
         } else {
             $_a = $a;

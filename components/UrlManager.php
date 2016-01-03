@@ -48,7 +48,7 @@ class UrlManager {
         ],
     ];
 
-    public static function to($a) {
+    public static function to($a, $absolute = false) {
         $_url  = null;
         $_opts = [];
         $_a    = [];
@@ -70,7 +70,7 @@ class UrlManager {
                 }
 
                 if ($match) {
-                    $_url = $url;
+                    $_url = $absolute ? (\CW::$app->params['siteUrl'] . $url) : $url;
 
                     foreach ($_a as $k => $v) {
                         $replaced[] = $k;

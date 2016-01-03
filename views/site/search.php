@@ -1,6 +1,8 @@
 <?php
 $term = CW::$app->request->get('term');
 $term = null !== $term ? trim($term) : $term;
+
+$this->title = 'Search updates - ' . \CW::$app->params['siteName'];
 ?>
 <script>
 $(function() {
@@ -22,12 +24,12 @@ $(function() {
 
 <div class="page-search">
     <h1 class="search-result-txt">Search results for '<?= htmlspecialchars($term) ?>'</h1>
-    <div style="width: 1200px;
-        position: relative;
-        margin: auto;">
-    <!--<div style="width : 100%;">-->
+    <div style="width: 1200px;position: relative;margin: auto;">
+        <div id="no-results-found" class="hidden" style="width: 200px; margin: auto;">
+            <h3>No updates found.</h3>
+        </div>
         <div id="updates-cont" class="msr-cont">
-            <!-- <div id="no-results-found" class="hidden" style="width: 200px;">
+<!--             <div id="no-results-found" class="hidden" style="width: 200px;">
                 <h3>No updates found.</h3>
             </div> -->
         </div>

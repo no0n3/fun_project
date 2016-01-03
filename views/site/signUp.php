@@ -1,5 +1,7 @@
 <?php
 use components\web\widgets\Form;
+
+$this->title = 'Sign up - ' . \CW::$app->params['siteName'];
 ?>
 <div class="start-page">
     <?php if ($success) : ?>

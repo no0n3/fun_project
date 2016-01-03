@@ -7,6 +7,21 @@ namespace components\web;
 class View extends \classes\Object {
     protected $controller;
 
+    public $title;
+    private $metaTags = [];
+
+    public function registerMetaTag($meta) {
+        if (!is_array($meta)) {
+            return false;
+        }
+
+        $this->metaTags[] = $meta;
+    }
+
+    public function getMetaTags() {
+        return $this->metaTags;
+    }
+
     public function __construct($controller) {
         $this->controller = $controller;
     }

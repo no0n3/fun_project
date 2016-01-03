@@ -1,5 +1,7 @@
 <?php
 $modelName = $model->getClassName(false);
+
+$this->title = 'Create update - ' . \CW::$app->params['siteName'];
 ?>
 <script>
 

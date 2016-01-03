@@ -2,6 +2,7 @@
 use CW;
 use models\Update;
 use components\UrlManager;
+use components\helpers\ArrayHelper;
 
 $categoryName = CW::$app->request->get('category');
 $type = CW::$app->request->get('type');
@@ -25,6 +26,15 @@ if (
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link href="/css/app.css" rel="stylesheet" type="text/css">
 <link rel="shortcut icon" href="/images/logo.ico">
+
+<title><?= $view->title ?></title>
+<?php
+foreach ($view->getMetaTags() as $meta) {
+    echo '<meta ' . ArrayHelper::getArrayToString($meta, ' ', function($v, $k) {
+        return "\"$k\"=\"$v\"";
+    }) . '></meta>';
+}
+?>
 <script>
 function sAjax(ajaxData, hasCsrf) {
     hasCsrf = undefined === hasCsrf ? true : hasCsrf;
@@ -137,7 +147,7 @@ $(function() {
     <?php endif; ?>
 </div>
 <div class="page-container">
-    <?= $view ?>
+    <?= $content ?>
 </div>
 </body>
 </html>

@@ -1,8 +1,12 @@
 <?php
 use components\helpers\ArrayHelper;
 use components\UrlManager;
+use models\Update;
 
 $type = CW::$app->request->get('type');
+$type = Update::isValidType($type) ? $type : \models\Update::TYPE_FRESH;
+
+$this->title = "Browse $type updates";
 ?>
 <script>
 $(function() {
@@ -15,7 +19,7 @@ $(function() {
         url : <?= json_encode(\components\UrlManager::to(['update/ajaxLoad'])) ?>,
         ajaxData : {
             category : App.update.category,
-            type : '<?= \models\Update::isValidType($type) ? $type : \models\Update::TYPE_FRESH ?>'
+            type : <?= json_encode($type) ?>
         }
     });
 
@@ -39,9 +43,7 @@ $(function() {
     </div>
 <?php endif; ?>
 <div class="page-no-popular">
-    <div style="width: 1200px;
-        position: relative;
-        margin: auto;">
+    <div style="width: 1200px;position: relative;margin: auto;">
         <div id="no-results-found" class="hidden" style="width: 200px; margin: auto;">
             <h3>No updates found.</h3>
         </div>

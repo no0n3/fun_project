@@ -377,7 +377,7 @@ class Update {
     }
 
     public static function getUpdateUrl($updateId, $categoryName = null) { 
-        return null !== $categoryName ?
+        return '' !== trim($categoryName) ?
             UrlManager::to(['update/view', 'id' => $updateId, 'category' => $categoryName])
             : UrlManager::to(['update/view', 'id' => $updateId]);
     }

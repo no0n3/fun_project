@@ -3,6 +3,8 @@ use models\User;
 use components\UrlManager;
 
 $modelName = $model->getClassName(false);
+
+$this->title = 'Settings - ' . \CW::$app->user->identity->username . ' - ' . \CW::$app->params['siteName'];
 ?>
 <script>
 $(function() {
