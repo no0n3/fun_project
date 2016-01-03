@@ -84,7 +84,8 @@ class UpdateController extends BaseController {
 
         if (null !== $update) {
             $update['imageUrl'] = Update::getUpdateImageUrl($update['id'], Update::IMAGE_BIG_WIDTH);
-            $categories = Update::getUpdateCategories($update['id']);
+            $categories         = Update::getUpdateCategories($update['id']);
+            $update['from']     = \models\User::findUser($update['user_id']);
         } else {
             $categories = [];
         }

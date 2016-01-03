@@ -649,3 +649,32 @@ li {
 .btn-voted {
     color: #09f;
 }
+
+.posted-from-info-c {
+    position: absolute;
+    top: 0px;
+    left: 39px;
+    width: 440px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.posted-from-c {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.posted-from-username-link {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+                
+.posted-from-image {
+    border-radius: 3px;
+}
+                
+.posted-from-ago {
+    margin: 0px; padding: 0px; font-size: 13px; font-weight: bold;
+}

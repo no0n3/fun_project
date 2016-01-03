@@ -3,6 +3,7 @@ namespace models;
 
 use CW;
 use components\UrlManager;
+use components\helpers\ArrayHelper;
 
 /**
  * @author Velizar Ivanov <zivanof@gmail.com>
@@ -97,6 +98,7 @@ class Update {
 
         if (0 < $updatesCount) {
             self::setUpdateTags($updates);
+            self::setUpdatePostedFrom($updates);
             Image::setUpdateImages($updates);
         }
 
@@ -109,8 +111,12 @@ class Update {
      * @return type
      */
     public static function setUpdateTags(&$updates) {
+        if (!is_array($updates) || 0 === count($updates)) {
+            return;
+        }
+
         $updateTags = UpdateTag::getUpdateTags(
-            \components\helpers\ArrayHelper::getKeyArray($updates, 'id')
+            ArrayHelper::getKeyArray($updates, 'id')
         );
         
         $updatesCount = count($updates);
@@ -126,6 +132,46 @@ class Update {
         }
 
         return $updates;
+    }
+
+    /**
+     * 
+     * @param array $updates
+     * @return type
+     */
+    public static function setUpdatePostedFrom(&$updates) {
+        if (!is_array($updates) || 0 === count($updates)) {
+            return;
+        }
+
+        $users = [];
+
+        foreach ($updates as &$update) {
+            if (!isset($users[ $update['user_id'] ])) {
+                $users[ $update['user_id'] ] = [];
+            }
+
+            $users[ $update['user_id'] ][] = &$update;
+        }
+
+        $userIds = ArrayHelper::keyArray($users);
+
+        if (0 === count($userIds)) {
+            return;
+        }
+
+        $stmt = \CW::$app->db->executeQuery('SELECT id, username, profile_img_id FROM users WHERE id IN (' . ArrayHelper::getArrayToString($userIds, ',') . ')');
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        foreach ($result as $user) {
+            $user['imgUrl']     = \models\User::getProfilePictureUrl($user['profile_img_id'], $user['id']);
+            $user['username']   = htmlspecialchars($user['username']);
+            $user['profileUrl'] = \models\User::getProfileUrl($user['id']);
+
+            foreach ($users[$user['id']] as &$update) {
+                $update['from'] = $user;
+            }
+        }
     }
 
     /**
@@ -180,6 +226,7 @@ class Update {
 
         if (0 < $updatesCount) {
             self::setUpdateTags($updates);
+            self::setUpdatePostedFrom($updates);
             Image::setUpdateImages($updates);
         }
 

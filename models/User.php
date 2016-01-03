@@ -73,7 +73,7 @@ class User extends BaseModel {
             return null;
         }
 
-        $stmt = \CW::$app->db->executeQuery('SELECT `id`, `username`, `description` FROM `users` WHERE `id` = ' . $id);
+        $stmt = \CW::$app->db->executeQuery('SELECT `id`, `username`, `description`, `profile_img_id` FROM `users` WHERE `id` = ' . $id);
         $result = $stmt->fetchAll(\PDO::FETCH_CLASS, self::getClassName());
 
         return 0 < count($result) ? $result[0] : null;

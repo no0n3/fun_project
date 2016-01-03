@@ -19,7 +19,7 @@ class Search {
         $stmt = CW::$app->db->executeQuery("SELECT id FROM tags WHERE name IN (".ArrayHelper::getArrayToString($tags, ',', function ($v) {return "'$v'";}).")");
         $tagIds = ArrayHelper::getKeyArray( $stmt->fetchAll(\PDO::FETCH_ASSOC), 'id' );
 
-        if (empty($tagIds)) {
+        if (0 === count($tagIds)) {
             return [];
         }
 
@@ -31,31 +31,19 @@ class Search {
         $stmt = CW::$app->db->executeQuery($query);
         $updates = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-        $updatesCount = count($updates);
-
-        for ($i = 0; $i < $updatesCount; $i++) {
-            $updates[$i]['imgUrl'] = '/images/updates/' . $updates[$i]['id'] . '/' . Update::IMAGE_MEDIUM_WIDTH . 'xX.jpeg';
-            $updates[$i]['updateUrl'] = Update::getUpdateUrl($updates[$i]['id']);
-            $updates[$i]['postedAgo'] = BaseModel::getPostedAgoTime($updates[$i]['created_at']);
-            $updates[$i]['created_at'] = strtotime($updates[$i]['created_at']);
-            $updates[$i]['voted'] = (bool) $updates[$i]['voted'];
+        foreach ($updates as &$update) {
+            $update['imgUrl'] = '/images/updates/' . $update['id'] . '/' . Update::IMAGE_MEDIUM_WIDTH . 'xX.jpeg';
+            $update['updateUrl'] = Update::getUpdateUrl($update['id']);
+            $update['postedAgo'] = BaseModel::getPostedAgoTime($update['created_at']);
+            $update['created_at'] = strtotime($update['created_at']);
+            $update['voted'] = (bool) $update['voted'];
         }
 
-        $updateTags = UpdateTag::getUpdateTags(
-            \components\helpers\ArrayHelper::getKeyArray($updates, 'id')
-        );
-
-        foreach ($updateTags as $updateId => $tags) {
-            for ($i = 0; $i < $updatesCount; $i++) {
-                if ($updates[$i]['id'] != $updateId) {
-                    continue;
-                }
-
-                $updates[$i]['tags'] = $tags;
-            }
+        if (0 < count($updates)) {
+            Update::setUpdateTags($updates);
+            Update::setUpdatePostedFrom($updates);
+            Image::setUpdateImages($updates);
         }
-
-        Image::setUpdateImages($updates);
 
         return $updates;
     }

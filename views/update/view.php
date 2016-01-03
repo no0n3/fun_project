@@ -137,6 +137,7 @@ $(function() {
 
     load();
 
+<?php if (CW::$app->user->isLogged()) : ?>
     var upvotesEle = document.getElementById('upvotes');
     var upvote = document.getElementById('upvote-btn');
 
@@ -169,6 +170,7 @@ $(function() {
     upvote.setAttribute('class', 'fa fa-thumbs-up update-btn');
     upvote.setAttribute('title', voted ? 'unvote' : 'upvote');
     upvote.setAttribute('style', voted ? 'margin-right: 7px; color: #09f;' : 'margin-right: 7px;');
+<?php endif; ?>
 });
 </script>
 
@@ -188,14 +190,22 @@ padding: 1px 5px;"><?= htmlspecialchars($category['name']) ?></a>
         vertical-align: top;
         outline: 1px solid #ddd; background-color: black;">
         <?php if ($update['is_gif']) : ?>
-        <video poster="/images/updates/<?= $update['id'] ?>/poster.jpeg" style="min-height:209.78260869565px;width: 500px; vertical-align: top;" width="500"
-        loop muted autoplay="true">
+        <video poster="/images/updates/<?= $update['id'] ?>/poster.jpeg" style="min-height:209.78260869565px;width: 500px; vertical-align: top;" width="500" loop muted autoplay="true">
             <source src="/images/updates/<?= $update['id'] ?>/medium.mp4">
             <source src="/images/updates/<?= $update['id'] ?>/medium.webm">
         </video>
         <?php else : ?>
         <img class="image" src="<?= $update['imageUrl'] ?>">
         <?php endif; ?>
+    </div>
+    <div class="posted-from-c" style="margin: 10px;">
+        <a href="<?= \models\User::getProfileUrl($update['user_id']) ?>">
+            <img src="<?= \models\User::getProfilePictureUrl($update['from']->profile_img_id, $update['from']->id) ?>" class="posted-from-image" width="35" height="35">
+        </a>
+        <div class="posted-from-info-c">
+            <a href="<?= \models\User::getProfileUrl($update['user_id']) ?>" class="link posted-from-username-link"><?= htmlspecialchars($update['from']->username) ?></a>
+            <p class="posted-from-ago"><?= $update['postedAgo'] ?></p>
+        </div>
     </div>
     <?php if (!empty($update['tags'])) : ?>
     <div style="padding: 10px 5px;">

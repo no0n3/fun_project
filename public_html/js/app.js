@@ -140,6 +140,40 @@ var App = {
         renderUpdate : function(data, msnry) {
             var updateCont = document.createElement('div');
             updateCont.setAttribute('class', 'update-cont');
+
+            if (data.from) {
+                var fromCont = document.createElement('div');
+                fromCont.setAttribute('class', 'posted-from-c');
+                var fromInfoCont = document.createElement('div');
+                fromInfoCont.setAttribute('class', 'posted-from-info-c');
+
+                var fromUsernameLink = document.createElement('a');
+                fromUsernameLink.setAttribute('href', data.from.profileUrl);
+                fromUsernameLink.setAttribute('class', 'link posted-from-username-link');
+                fromUsernameLink.innerHTML = data.from.username;
+
+                var fromImg = document.createElement('img');
+                fromImg.setAttribute('src', data.from.imgUrl);
+                fromImg.setAttribute('class', 'posted-from-image');
+                fromImg.setAttribute('width', 35);
+                fromImg.setAttribute('height', 35);
+
+                var fromImageLink = document.createElement('a');
+                fromImageLink.setAttribute('href', data.from.profileUrl);
+
+                var postedAgoInfo = document.createElement('p');
+                postedAgoInfo.innerHTML = data.postedAgo;
+                postedAgoInfo.setAttribute('class', 'posted-from-ago');
+
+                fromCont.appendChild(fromImageLink);
+                fromImageLink.appendChild(fromImg);
+                fromCont.appendChild(fromInfoCont);
+                fromInfoCont.appendChild(fromUsernameLink);
+                fromInfoCont.appendChild(postedAgoInfo);
+
+                updateCont.appendChild(fromCont);
+            }
+            
             var updateInfoCont = document.createElement('div');
             var updateLink1 = document.createElement('a');
             var updateLinkCont = document.createElement('h3');
