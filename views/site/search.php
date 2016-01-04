@@ -23,15 +23,12 @@ $(function() {
 </script>
 
 <div class="page-search">
-    <h1 class="search-result-txt">Search results for '<?= htmlspecialchars($term) ?>'</h1>
+    <p class="search-result-txt" style="text-align: center;font-size: 20px;">Search results for '<span style="color: #359C48;"><?= htmlspecialchars($term) ?></span>'</p>
     <div style="width: 1200px;position: relative;margin: auto;">
         <div id="no-results-found" class="hidden" style="width: 200px; margin: auto;">
-            <h3>No updates found.</h3>
+            <h3>No results found.</h3>
         </div>
         <div id="updates-cont" class="msr-cont">
-<!--             <div id="no-results-found" class="hidden" style="width: 200px;">
-                <h3>No updates found.</h3>
-            </div> -->
         </div>
         <div id="loading">
             <?= $this->render('../search/loading') ?>
