@@ -18,7 +18,7 @@ $model = new \models\forms\ChangePasswordForm();
             ]
         ]);
 
-        echo $form->input('password', $model, 'oldPassword', [
+        $form->input('password', $model, 'oldPassword', [
             'attrs' => [
                 'class' => 'form-inp',
                 'style' => 'padding-top: 10px;'
