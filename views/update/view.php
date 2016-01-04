@@ -10,11 +10,23 @@ use components\UrlManager;
 </div>
 <?php else : ?>
 <?php
+$imgUrl = CW::$app->params['siteUrl'] . ($update['is_gif'] ?
+    "/images/updates/{$update['id']}/poster.jpeg"
+    : $update['imageUrl']);
+
+$this->registerLink([
+    'rel' => 'image_src',
+    'href'  => $imgUrl
+]);
+
+$this->registerMetaTag([
+    'name'    => 'twitter:image',
+    'content' => $imgUrl
+]);
+
 $this->registerMetaTag([
     'property' => 'og:image',
-    'content'  => CW::$app->params['siteUrl'] . ($update['is_gif'] ?
-        "/images/updates/{$update['id']}/poster.jpeg"
-        : $update['imageUrl'])
+    'content'  => $imgUrl
 ]);
 $this->registerMetaTag([
     'property' => 'og:url',
@@ -24,6 +36,11 @@ $this->registerMetaTag([
     'property' => 'og:title',
     'content'  => $update['description']
 ]);
+$this->registerMetaTag([
+    'property' => 'og:description',
+    'content'  => '...'
+]);
+
 $this->registerMetaTag([
     'property' => 'og:description',
     'content'  => '...'

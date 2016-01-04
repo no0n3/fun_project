@@ -9,6 +9,7 @@ class View extends \classes\Object {
 
     public $title;
     private $metaTags = [];
+    private $links    = [];
 
     public function registerMetaTag($meta) {
         if (!is_array($meta)) {
@@ -20,6 +21,18 @@ class View extends \classes\Object {
 
     public function getMetaTags() {
         return $this->metaTags;
+    }
+
+    public function registerLink($link) {
+        if (!is_array($link)) {
+            return false;
+        }
+
+        $this->links[] = $link;
+    }
+
+    public function getLinks() {
+        return $this->links;
     }
 
     public function __construct($controller) {

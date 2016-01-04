@@ -2,7 +2,7 @@
 
 return [
     'sitePath' => '/var/www/php_course_work/',
-    'siteUrl'  => 'http://fun.zivanif.com',
+    'siteUrl'  => 'http://fun.zivanof.com',
     'siteName' => 'fun.zivanof',
 
     'dbServerName' => 'localhost',
