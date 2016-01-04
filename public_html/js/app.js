@@ -150,6 +150,7 @@ var App = {
                 var fromUsernameLink = document.createElement('a');
                 fromUsernameLink.setAttribute('href', data.from.profileUrl);
                 fromUsernameLink.setAttribute('class', 'link posted-from-username-link');
+                fromUsernameLink.setAttribute('style', 'font-weight: bold;');
                 fromUsernameLink.innerHTML = data.from.username;
 
                 var fromImg = document.createElement('img');

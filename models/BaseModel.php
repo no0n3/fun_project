@@ -149,7 +149,7 @@ abstract class BaseModel extends \classes\Object {
         $currenttime = (int) strtotime(date('Y-m-d H:i:s', time())) * 1000;
         $time = (int) $time * 1000;
 
-        $dif = ( $currenttime - $time ) / 1000;
+        $dif = ($currenttime - $time) / 1000;
         $dif = (int) $dif;
 
         if ($dif >= 60) {
@@ -164,26 +164,26 @@ abstract class BaseModel extends \classes\Object {
                             $dif = (int) ($dif / 4);
                             if ($dif >= 12) {
                                 $dif = (int) ($dif / 12);
-                                return "$dif years ago";
+                                return "$dif year".(1 === $dif ? '' : 's')." ago";
                             } else {
                                 // moths
-                                return "$dif months ago";
+                                return "$dif month".(1 === $dif ? '' : 's')." ago";
                             }
                         } else {
                             // weeks
-                            return "$dif weeks ago";
+                            return "$dif week".(1 === $dif ? '' : 's')." ago";
                         }
                     } else {
                         // days
-                        return "$dif days ago";
+                        return "$dif day".(1 === $dif ? '' : 's')." ago";
                     }
                 } else {
                     // hours
-                    return "$dif hours ago";
+                    return "$dif hour".(1 === $dif ? '' : 's')." ago";
                 }
             } else {
                 // mins
-                return "$dif minutes ago";
+                return "$dif minute".(1 === $dif ? '' : 's')." ago";
             }
         } else {
             return 'just now';

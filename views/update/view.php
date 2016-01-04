@@ -194,18 +194,17 @@ $(function() {
 <div style="width : 800px; margin : auto; position: relative; ">
     <h2 class='update-title'><?= $update['description'] ?>
     <?php foreach ($categories as $category) : ?>
-        <a href="<?= \components\UrlManager::to(['site/index', 'category' => $category['name']]) ?>" style="font-weight: initial;
+        <a href="<?= \components\UrlManager::to(['site/index', 'category' => $category['name']]) ?>" style="
+    font-weight: initial;
     font-size: initial;
     vertical-align: middle;
     background-color: #3DAD3D;
-color: white;
-text-decoration: none;
-padding: 1px 5px;"><?= htmlspecialchars($category['name']) ?></a>
+    color: white;
+    text-decoration: none;
+    padding: 1px 5px;"><?= htmlspecialchars($category['name']) ?></a>
         <?php endforeach; ?>
     </h2>
-    <div style="text-align: center;
-        vertical-align: top;
-        outline: 1px solid #ddd; background-color: black;">
+    <div style="text-align: center; vertical-align: top; outline: 1px solid #ddd; background-color: black;">
         <?php if ($update['is_gif']) : ?>
         <video poster="/images/updates/<?= $update['id'] ?>/poster.jpeg" style="min-height:209.78260869565px;width: 500px; vertical-align: top;" width="500" loop muted autoplay="true">
             <source src="/images/updates/<?= $update['id'] ?>/medium.mp4">
@@ -220,7 +219,7 @@ padding: 1px 5px;"><?= htmlspecialchars($category['name']) ?></a>
             <img src="<?= \models\User::getProfilePictureUrl($update['from']->profile_img_id, $update['from']->id) ?>" class="posted-from-image" width="35" height="35">
         </a>
         <div class="posted-from-info-c">
-            <a href="<?= \models\User::getProfileUrl($update['user_id']) ?>" class="link posted-from-username-link"><?= htmlspecialchars($update['from']->username) ?></a>
+            <a href="<?= \models\User::getProfileUrl($update['user_id']) ?>" class="link posted-from-username-link" style="font-weight: bold;"><?= htmlspecialchars($update['from']->username) ?></a>
             <p class="posted-from-ago"><?= $update['postedAgo'] ?></p>
         </div>
     </div>

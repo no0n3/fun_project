@@ -32,13 +32,13 @@ $csrfHash = isset($_SESSION['_csrf']) ? \components\Security::hash($_SESSION['_c
 foreach ($view->getLinks() as $link) {
     echo '<link ' . ArrayHelper::getArrayToString($link, ' ', function($v, $k) {
         return "\"$k\"=\"$v\"";
-    }) . '></link>';
+    }) . "></link>\n";
 }
 
 foreach ($view->getMetaTags() as $meta) {
     echo '<meta ' . ArrayHelper::getArrayToString($meta, ' ', function($v, $k) {
         return "\"$k\"=\"$v\"";
-    }) . '></meta>';
+    }) . "></meta>\n";
 }
 ?>
 <script>
