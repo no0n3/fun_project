@@ -72,8 +72,8 @@ class UpdateController extends BaseController {
     }
 
     public function doView() {
-        $updateId = CW::$app->request->get('id');
-        $type = CW::$app->request->get('type');
+        $updateId     = CW::$app->request->get('id');
+        $type         = CW::$app->request->get('type');
         $categoryName = CW::$app->request->get('category');
 
         $update = \models\Update::getOne(
@@ -93,8 +93,8 @@ class UpdateController extends BaseController {
         CW::$app->db->close();
 
         return $this->render('view', [
-            'update' => $update,
-            'categories' => $categories,
+            'update'       => $update,
+            'categories'   => $categories,
             'categoryName' => $categoryName,
             'prevUpdateId' => null === $update ? null : Update::getPrev($updateId, $categoryName),
             'nextUpdateId' => null === $update ? null : Update::getNext($updateId, $categoryName)

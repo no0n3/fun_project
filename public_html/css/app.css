@@ -83,8 +83,8 @@ textarea {
 }
 
 #update-buttons {
-    margin: 10px;
-    margin-top: 5px;
+/*    margin: 10px;
+    margin-top: 5px;*/
 }
 
 .btn {
@@ -677,4 +677,57 @@ li {
                 
 .posted-from-ago {
     margin: 0px; padding: 0px; font-size: 13px; font-weight: bold;
+}
+
+.google-plus-share-btn {
+    margin-left: 7px;
+    border: 1px solid #9C372A;
+    height: 24px;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    color: #fff;
+    background-color: #D34836;
+    padding: 2px 10px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.facebook-share-btn {
+    border: 1px solid #0D386F;
+    height: 24px;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    color: #fff;
+    background-color: #5D7DAE;
+    padding: 2px 10px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.twitter-share-btn {
+    margin-left: 7px;
+    border: 1px solid #1093C4;
+    height: 24px;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    color: #fff;
+    background-color: #00aced;
+    padding: 2px 10px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.comment-item {
+    margin-bottom: 15px;
+}
+
+.comment-c1 {
+    display: inline-block;
+}
+
+.comment-w-replies {
+    margin-top: 15px;
 }

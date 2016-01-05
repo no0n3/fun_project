@@ -234,7 +234,7 @@ class Comment {
         $result = [];
         $result['hasMore'] = false;
 
-        $last = $last ? (" AND c.`posted_on` > '" . date("Y-m-d H:i:s", $last) . "'") : '';
+        $last = is_numeric($last) ? (" AND c.`posted_on` > $last") : '';
         $query = "SELECT c.*, u.id ownerId, u.username ownerUsername, u.profile_img_id FROM `comments` c JOIN `users` u ON c.`user_id` = u.`id` WHERE c.`reply_to` = $replyTo $last ORDER BY c.`posted_on` ASC LIMIT 7";
 
         $stmt = \CW::$app->db->executeQuery($query);
@@ -247,10 +247,10 @@ class Comment {
         for ($i = 0; $i < $repliesCount; $i++) {
             $last = $replies[$i]->posted_on;
             $replies[$i]->postedAgo = BaseModel::getPostedAgoTime($replies[$i]->posted_on);
-            $replies[$i]->posted_on = strtotime($replies[$i]->posted_on);
+            $replies[$i]->content   = htmlspecialchars($replies[$i]->content);
             $replies[$i]->owner = [
                 'id' => $replies[$i]->ownerId,
-                'username' => $replies[$i]->ownerUsername,
+                'username' => htmlspecialchars($replies[$i]->ownerUsername),
                 'profileUrl' => \models\User::getProfileUrl($replies[$i]->ownerId),
                 'pictureUrl' => User::getProfilePictureUrl(
                         $replies[$i]->profile_img_id,

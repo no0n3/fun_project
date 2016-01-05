@@ -1,4 +1,39 @@
 var App = {
+    share : function(data) {
+        var url = null, title = '';
+
+        if ('facebook' === data.type) {
+            url = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(data.url);
+            title = 'Facebook share dialog';
+        } else if ('google-plus' === data.type) {
+            url = 'https://plus.google.com/share?url=' + encodeURIComponent(data.url);
+            title = 'Google plus share dialog';
+        } else if ('twitter' === data.type) {
+            url = 'http://twitter.com/share?url=' + encodeURIComponent(data.url) + '&text=' + encodeURIComponent(data.text ? data.text : '');
+            title = 'Twitter share dialog';
+        }
+
+        if (null === url) {
+            return;
+        }
+
+        var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+        var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+
+        width = window.innerWidth ? window.innerWidth : (document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width);
+        height = window.innerHeight ? window.innerHeight : (document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height);
+
+        var w = 626;
+        var h = 436;
+        var left = ((width / 2) - (w / 2)) + dualScreenLeft;
+        var top = ((height / 2) - (h / 2)) + dualScreenTop;
+
+        window.open(
+            url,
+            title,
+            "width=" + w + ",height=" + h + ",top=" + top + ',left=' + left
+        );
+    },
     elementInViewport : function(el) {
         var top = el.offsetTop;
         var left = el.offsetLeft;
@@ -174,7 +209,7 @@ var App = {
 
                 updateCont.appendChild(fromCont);
             }
-            
+
             var updateInfoCont = document.createElement('div');
             var updateLink1 = document.createElement('a');
             var updateLinkCont = document.createElement('h3');
@@ -323,6 +358,58 @@ var App = {
             updateCont.appendChild(updateInfoCont);
             updateCont.appendChild(imageCont);
 
+            var shareButtonsCont = document.createElement('div');
+            shareButtonsCont.setAttribute('style', 'position: absolute;right: 10px;');
+
+            var twShareButton = document.createElement('button');
+            var tw = document.createElement('i');
+            tw.setAttribute('class', 'fa fa-twitter');
+            twShareButton.setAttribute('class', 'twitter-share-btn');
+
+            twShareButton.onclick = function() {
+                App.share({
+                    type : 'twitter',
+                    url  : data.updateUrl,
+                    text : data.description
+                });
+            };
+
+            twShareButton.appendChild(tw);
+            twShareButton.appendChild(document.createTextNode(" Twitter"));
+
+            var fbShareButton = document.createElement('button');
+            var fb = document.createElement('i');
+            fb.setAttribute('class', 'fa fa-facebook');
+            fbShareButton.setAttribute('class', 'facebook-share-btn');
+
+            fbShareButton.onclick = function() {
+                App.share({
+                    type : 'facebook',
+                    url  : data.updateUrl
+                });
+            };
+
+            var gpShareButton = document.createElement('button');
+            var gp = document.createElement('i');
+            gp.setAttribute('class', 'fa fa-google-plus');
+            gpShareButton.setAttribute('class', 'google-plus-share-btn');
+
+            gpShareButton.onclick = function() {
+                App.share({
+                    type : 'google-plus',
+                    url  : data.updateUrl
+                });
+            };
+
+            gpShareButton.appendChild(gp);
+            gpShareButton.appendChild(document.createTextNode(" Google"));
+
+            fbShareButton.appendChild(fb);
+            fbShareButton.appendChild(document.createTextNode(" Facebook"));
+            shareButtonsCont.appendChild(fbShareButton);
+            shareButtonsCont.appendChild(gpShareButton);
+            shareButtonsCont.appendChild(twShareButton);
+
             var buttonsCont = document.createElement('div');
             updateCont.appendChild(buttonsCont);
 
@@ -360,6 +447,12 @@ var App = {
             buttonsCont.appendChild(sep);
             buttonsCont.appendChild(commentCont);
 
+            var operButtonsCont = document.createElement('div');
+            operButtonsCont.setAttribute('style', 'height: 24px;');
+
+            updateCont.appendChild(operButtonsCont);
+            operButtonsCont.appendChild(shareButtonsCont);
+
             if (App.user.isLogged()) {
                 var upvote = document.createElement('i');
 
@@ -383,8 +476,7 @@ var App = {
                     }
                 });
 
-                var operButtonsCont = document.createElement('div');
-                updateCont.appendChild(operButtonsCont);
+                
 
                 upvote.setAttribute('class', 'fa fa-thumbs-up update-btn');
                 upvote.setAttribute('title', data.voted ? 'unvote' : 'upvote');
@@ -439,7 +531,6 @@ var App = {
                         if (comment) {
                             addTo.appendChild(comment);
                         }
-
                     }
 
                     if (callback) {
@@ -460,7 +551,7 @@ var App = {
             var isTopLevel = data.replies;
 
             var updateCont = document.createElement('div');
-            updateCont.setAttribute('style', 'padding : 5px; border-bottom : 0px solid #ddd; margin-bottom: 10px; width: ' + (isTopLevel ? 700 : 600) + 'px; display: inline-block;');
+            updateCont.setAttribute('style', 'padding : 5px; border-bottom : 0px solid #ddd; margin-bottom: 0px; width: ' + (isTopLevel ? 630 : 500) + 'px; display: inline-block;');
             var updateInfoCont = document.createElement('div');
             var ownerLink = document.createElement('a');
             ownerLink.innerHTML = data.owner.username;
@@ -498,15 +589,24 @@ var App = {
                 var oldestReply = null;
 
                 var repliesCont = document.createElement('div');
+                $repliesCont = $(repliesCont);
                 var repliesList = document.createElement('div');
-                repliesCont.setAttribute('style', 'border: 0px solid black; margin-left: 0px; margin-top: 15px;');
+
+                if (0 < data.replies.length) {
+                    repliesCont.setAttribute('class', 'comment-w-replies');
+                }
 
                 if (App.user.isLogged()) {
+                    var _hasMore = data.hasMore;
                     var reply = document.createElement('span');
                     reply.setAttribute('class', 'btn');
                     reply.innerHTML = 'reply';
 
                     reply.onclick = function() {
+                        if (!$repliesCont.hasClass('comment-w-replies')) {
+                            $repliesCont.addClass('comment-w-replies');
+                        }
+
                         replyInp.style.display = 'inline-block';
                         replyInp.focus();
                     };
@@ -532,7 +632,7 @@ var App = {
                             }, repliesList, function () {
                                 replyInp.value = '';
                             }, function() {
-                                return !data.hasMore;
+                                return !_hasMore;
                             });
                         }
                     };
@@ -568,6 +668,7 @@ var App = {
                             oldestReply = time;
 
                             if (!hasMore) {
+                                _hasMore = false;
                                 loadMore.setAttribute('class', 'load-more-comments hidden');
                             }
                         });
@@ -577,8 +678,9 @@ var App = {
             }
 
             var c = document.createElement('div');
+            c.setAttribute('class', 'comment-item');
             var c1 = document.createElement('div');
-            c1.setAttribute('style', 'display : inline-block;');
+            c1.setAttribute('class', 'comment-c1');
             c.appendChild(c1);
             c1.appendChild(img);
             c1.appendChild(updateCont);

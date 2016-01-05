@@ -1,4 +1,5 @@
 <?php
+use models\Update;
 use components\UrlManager;
 ?>
 <?php if (null === $update) : ?>
@@ -189,6 +190,17 @@ $(function() {
     upvote.setAttribute('style', voted ? 'margin-right: 7px; color: #09f;' : 'margin-right: 7px;');
 <?php endif; ?>
 });
+
+var  updateUrl = <?= json_encode(Update::getUpdateUrl($update['id'])) ?>;
+
+function share(type) {
+    App.share({
+        type : type,
+        url  : updateUrl,
+        text : 'google-plus' === type ? <?= json_encode($update['description']) ?> : ''
+    });
+}
+
 </script>
 
 <div style="width : 800px; margin : auto; position: relative; ">
@@ -214,7 +226,9 @@ $(function() {
         <img class="image" src="<?= $update['imageUrl'] ?>">
         <?php endif; ?>
     </div>
-    <div class="posted-from-c" style="margin: 10px;">
+    <div style="background-color: #fff; border: 1px solid #ddd; border-top: 0px;">
+        <div style="padding: 15px;">
+    <div class="posted-from-c" style="margin: 1px;">
         <a href="<?= \models\User::getProfileUrl($update['user_id']) ?>">
             <img src="<?= \models\User::getProfilePictureUrl($update['from']->profile_img_id, $update['from']->id) ?>" class="posted-from-image" width="35" height="35">
         </a>
@@ -224,35 +238,49 @@ $(function() {
         </div>
     </div>
     <?php if (!empty($update['tags'])) : ?>
-    <div style="padding: 10px 5px;">
+    <div style="padding: 10px 0px;">
         <?php foreach ($update['tags'] as $tag) : ?>
         <a class="link" href="<?= \components\UrlManager::to(['site/search', 'term' => $tag['name']]) ?>">#<?= htmlspecialchars($tag['name']) ?></a>
         <?php endforeach; ?>
     </div>
     <?php endif; ?>
-    <div id='update-buttons'>
-        <a id="upvotes" class="btn">points <?= $update['upvotes'] ?></a> - <a class="btn" href="#comments">comments <?= $update['comments'] ?></a>
-        <?php if (CW::$app->user->isLogged()) : ?>
-        <div style="margin-top: 10px;"><i id="upvote-btn"></i></div>
-        <?php endif; ?>
+    <div id='update-buttons' style="height: 24px; position: relative;">
+        <a id="upvotes" class="btn" style="vertical-align: middle; line-height: 24px;">points <?= $update['upvotes'] ?></a> - <a class="btn" href="#comments" style="vertical-align: middle; line-height: 24px;">comments <?= $update['comments'] ?></a>
+        <div style="position: absolute; right: 0px; top: 0px;">
+            <button class="facebook-share-btn" onclick="share('facebook')"><i class="fa fa-facebook"></i> Facebook</button>
+            <button class="google-plus-share-btn" onclick="share('google-plus')"><i class="fa fa-google-plus"></i> Google</button>
+            <button class="twitter-share-btn" onclick="share('twitter')"><i class="fa fa-twitter"></i> Twitter</button>
+        </div>
     </div>
     <?php if (CW::$app->user->isLogged()) : ?>
-    <div>
-        <textarea id="create-comment" placeholder="Write a comment..."></textarea>
+    <div style="position: relative; margin: 10px 0px; height: 24px;">
+        <div style="margin-top: 0px;"><i id="upvote-btn"></i></div>
     </div>
     <?php endif; ?>
-    <div id="comments" class="comments">
-        <div id="comments-cont"></div>
-        <div>
-            <span id="load-more-comments" class="load-more-comments hidden">Show more comments</span>
+    <?php if (CW::$app->user->isLogged()) : ?>
+    <div>
+        <textarea id="create-comment" placeholder="Write a comment..." style="vertical-align: top;"></textarea>
+    </div>
+    <?php endif; ?>
         </div>
-        <?php if (0 == $update['comments'] && CW::$app->user->isLogged()) : ?>
-        <div id="first-to-comment" class="hidden" style="text-align: center;">
-            <span style="font-weight: bold;">
-                Be the first to comment!
-            </span>
+    </div>
+    <div>
+        <div style="border-bottom: 1px solid gray; padding: 10px; color: gray;">
+            <span>comments</span>
         </div>
-        <?php endif; ?>
+        <div id="comments" class="comments">
+            <div id="comments-cont"></div>
+            <div>
+                <span id="load-more-comments" class="load-more-comments hidden">Show more comments</span>
+            </div>
+            <?php if (0 == $update['comments'] && CW::$app->user->isLogged()) : ?>
+            <div id="first-to-comment" class="hidden" style="text-align: center;">
+                <span style="font-weight: bold;">
+                    Be the first to comment!
+                </span>
+            </div>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
 <?php endif; ?>

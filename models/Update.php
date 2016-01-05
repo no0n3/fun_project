@@ -425,8 +425,8 @@ class Update {
 
     public static function getUpdateUrl($updateId, $categoryName = null) { 
         return '' !== trim($categoryName) ?
-            UrlManager::to(['update/view', 'id' => $updateId, 'category' => $categoryName])
-            : UrlManager::to(['update/view', 'id' => $updateId]);
+            UrlManager::to(['update/view', 'id' => $updateId, 'category' => $categoryName], true)
+            : UrlManager::to(['update/view', 'id' => $updateId], true);
     }
 
     public static function upvote($updateId, $userId) {
