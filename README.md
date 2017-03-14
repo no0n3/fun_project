@@ -1,3 +1,11 @@
+Purpose
+-------------
+This project was part of a university course assignment for creating a web application.
+
+Description
+-------------
+This applican is a simpler implementation of [http://9gag.com/](http://9gag.com/) as user can register/login and create, like, comment, share update. The purpose of this application is entirely for learning purpose.
+
 Set up project
 -------------
 
