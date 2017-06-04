@@ -9,9 +9,9 @@ This applican is a simpler implementation of [http://9gag.com/](http://9gag.com/
 Set up project
 -------------
 
-* Change project location and database info in config/local-params.php
+* Change project location and database info in 'config/local-params.php'
 * Install and run composer. [Composer's getting started page](https://getcomposer.org/doc/00-intro.md)
 * Run the following console command in the project main directory to set up the database: php cw_console.php db/init
-* install ffmpeg [Ffmpeg website](https://www.ffmpeg.org/)
+* install ffmpeg [Ffmpeg website](https://www.ffmpeg.org/) (used to convert gifs to videos)
 
 Working example: [http://fun.vivanof.com/](http://fun.vivanof.com/)
