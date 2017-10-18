@@ -1,6 +1,6 @@
 # 9gag demo application
 
-![Screenshot](https://raw.githubusercontent.com/no0n3/fun_project/master/demo_1.jpg)
+![Screenshot](images/demo_1.jpg)
 
 Purpose
 -------------
