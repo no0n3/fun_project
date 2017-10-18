@@ -1,3 +1,7 @@
+# 9gag demo application
+
+![Screenshot](https://raw.githubusercontent.com/no0n3/fun_project/master/demo_1.png)
+
 Purpose
 -------------
 This project was part of a university course assignment for creating a web application.
