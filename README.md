@@ -2,6 +2,19 @@
 
 ![Screenshot](images/demo_1.jpg)
 
+Features
+-------------
+
+- Auth: sign up, login, logout
+- Update profile info, profile picture, etc.
+- Post image or gif posts
+- Like, comment and share posts
+- Add posts to categories and add tags
+- Search posts by tags
+- View posts by categories
+- View trending or fresh posts
+- View user profile containing liked, commented and uploaded posts
+
 Purpose
 -------------
 This project was part of a university course assignment for creating a web application.
