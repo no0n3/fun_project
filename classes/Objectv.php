@@ -4,7 +4,7 @@ namespace classes;
 /**
  * @author Velizar Ivanov <zivanof@gmail.com>
  */
-class Object {
+class Objectv {
 
     public function getClassName($withNamespace = true) {
         if (false === $withNamespace) {

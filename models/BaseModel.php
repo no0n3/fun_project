@@ -6,7 +6,7 @@ use components\helpers\ImageHelper;
 /**
  * @author Velizar Ivanov <zivanof@gmail.com>
  */
-abstract class BaseModel extends \classes\Object {
+abstract class BaseModel extends \classes\Objectv {
 
     const TYPE_IMAGE = 'image';
 

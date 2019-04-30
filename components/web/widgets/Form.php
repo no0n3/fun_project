@@ -4,7 +4,7 @@ namespace components\web\widgets;
 /**
  * @author Velizar Ivanov <zivanof@gmail.com>
  */
-class Form extends \classes\Object {
+class Form extends \classes\Objectv {
 
     private $id;
     private $method;

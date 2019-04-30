@@ -4,7 +4,7 @@ namespace components\web;
 /**
  * @author Velizar Ivanov <zivanof@gmail.com>
  */
-class View extends \classes\Object {
+class View extends \classes\Objectv {
     protected $controller;
 
     public $title;

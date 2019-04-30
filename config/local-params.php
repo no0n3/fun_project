@@ -1,12 +1,13 @@
 <?php
 
 return [
-    'sitePath' => '/var/www/php_course_work/',
+    'sitePath' => '/var/www/html/',
     'siteUrl'  => 'http://fun.zivanof.com',
     'siteName' => 'fun.zivanof',
 
-    'dbServerName' => 'localhost',
+    'dbServerName' => 'mysql',
+    'dbPort'       => '3306',
     'dbUsername'   => 'root',
-    'dbPassword'   => '',
+    'dbPassword'   => 'root',
     'dbName'       => 'cw2',
 ];

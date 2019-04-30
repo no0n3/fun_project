@@ -79,8 +79,9 @@ class DBConnection {
     private function connectToMySQL() {
         $this->con = new \PDO(
             sprintf(
-                "mysql:host=%s;dbname=%s",
+                "mysql:host=%s;port=%s;dbname=%s",
                 \CW::$app->params['dbServerName'],
+                \CW::$app->params['dbPort'],
                 \CW::$app->params['dbName']
             ),
             \CW::$app->params['dbUsername'],

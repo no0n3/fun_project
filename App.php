@@ -9,7 +9,7 @@ use components\exceptions\ErrorException;
 use components\exceptions\NotFoundException;
 use components\web\Controller;
 
-class App extends \classes\Object {
+class App extends \classes\Objectv {
 
     const DEFAULT_CONTROLLER = 'site';
 

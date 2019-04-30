@@ -10,7 +10,7 @@ use CW;
 /**
  * @author Velizar Ivanov <zivanof@gmail.com>
  */
-abstract class Controller extends \classes\Object {
+abstract class Controller extends \classes\Objectv {
 
     const DEFAULT_ACTION = 'index';
     const DEFAULT_LAYOUT = 'main';
