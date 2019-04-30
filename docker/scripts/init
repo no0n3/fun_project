@@ -1,0 +1,4 @@
+#!/bin/bash
+
+composer install
+php cw_console.php db/init
