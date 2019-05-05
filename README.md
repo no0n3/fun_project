@@ -32,3 +32,7 @@ Set up project
 * install ffmpeg [Ffmpeg website](https://www.ffmpeg.org/) (used to convert gifs to videos)
 
 Working example: [http://fun.vivanof.com/](http://fun.vivanof.com/)
+
+
+docker-compose up --build
+docker exec -i -t php_web /bin/bash then run php cw_console.php db/init
